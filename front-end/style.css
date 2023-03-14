@@ -1,0 +1,33 @@
+@font-face {
+  src: url(fonts/NetflixSans-Regular.otf);
+  font-family: Netflix;
+}
+
+html {
+  font-family: Netflix, sans-serif;
+  line-height: 2;
+  letter-spacing: 1px;
+}
+
+body {
+  width: 600px;
+  margin: 0 auto;
+  background-color: #ff9500;
+  padding: 0 20px, 20px, 20px;
+  border: 5px solid black;
+}
+
+h1 {
+  color: red;
+  text-align: center;
+}
+
+#logo {
+  width: 100px;
+  height: 100px ;
+}
+
+span {
+  color: red;
+  font-weight: bold;
+}
