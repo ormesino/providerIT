@@ -1,6 +1,6 @@
 /* Formatação geral */
 body {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Arial;
   font-size: 12px;
   margin: 0;
 }
@@ -18,17 +18,13 @@ body>.container {
   background-color: #C7E7F3;
 }
 
-caption, td, tr, th {
-  padding: 2px;
-}
-
-caption, .city {
-  font-weight: bold;
-}
-
 .title {
   background-color: #0D5188;
   color: white;
+}
+
+.title, .city {
+  font-weight: bold;
 }
 
 .header {
