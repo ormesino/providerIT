@@ -1,0 +1,53 @@
+/* Formatação geral */
+body {
+  font-family: Arial;
+  font-size: 12px;
+  margin: 0;
+}
+
+/* Centralização da tabela */
+body>.container {
+  display: flex;
+  justify-content: center;
+}
+
+/* Customização da tabela */
+.tabela {
+  border: 0;
+  width: 600px;
+  background-color: #C7E7F3;
+}
+
+.title {
+  background-color: #0D5188;
+  color: white;
+}
+
+.title, .city {
+  font-weight: bold;
+}
+
+.header {
+  background-color: #66C5E3;
+}
+
+.citylabel {
+  text-align: left;
+}
+
+.city {
+  color: #0D5188;
+}
+
+.position {
+  background-color: silver;
+  width: 10%;
+}
+
+.pop {
+  width: 15%;
+}
+
+.position, .pop {
+  text-align: center;
+}
