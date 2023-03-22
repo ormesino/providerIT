@@ -51,7 +51,8 @@
             <label for="sexo">Sexo:</label>
           </td>
           <td>
-            <select id="sexo" name="sexo">
+            <select placeholder="Selecione" id="sexo" name="sexo">
+              <option selected="selected"></option>
               <option value="Masculino">Masculino</option>
               <option value="Feminino">Feminino</option>
             </select>
@@ -60,7 +61,7 @@
             <label for="nascimento">Data de Nascimento:</label>
           </td>
           <td>
-            <input size="13" type="text" id="nascimento">
+            <input size="13" type="date" id="nascimento">
           </td>
         </tr>
 
@@ -84,12 +85,14 @@
 
         <tr>
           <td colspan="4" align="center">
-            <input type="reset" value="Limpar Dados">
+            <button type="button" onclick="limparForm()">Limpar Dados</button>
           </td>
         </tr>
       </form>
     </table>
   </div>
+
+  <script src="scripts/main.js"></script>
 </body>
 
 </html>
