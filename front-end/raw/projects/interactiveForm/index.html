@@ -5,70 +5,72 @@
   <meta charset="UTF-8">
   <title>Formulário</title>
   <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
-  <div class="container">
-    <h2>Ficha Cadastral</h2>
+  <!-- Div do form -->
+  <div class="formContainer">
+    <h1>Ficha Cadastral</h1>
 
     <table class="tabela" cellspacing="1px" cellpadding="1px">
       <form>
         <tr>
-          <td>
-            <label for="name">Nome:</label>
-          </td>
           <td colspan="3">
-            <input size="55" type="text" id="name">
+            <input placeholder="Nome Completo" type="text" name="nome">
           </td>
         </tr>
 
         <tr>
           <td>
-            <label for="rg">RG:</label>
+            <input placeholder="RG" type="text" name="rg">
           </td>
           <td>
-            <input size="13" type="text" id="rg">
+            <input placeholder="CPF" type="text" name="cpf">
           </td>
           <td>
-            <label for="cpf">C.P.F.:</label>
-          </td>
-          <td>
-            <input size="13" type="text" name="cpf">
+            <input placeholder="CEP" type="text" name="cep">
           </td>
         </tr>
 
         <tr>
           <td>
-            <label for="endereco">Endereço:</label>
+            <input placeholder="Rua" type="text" name="rua">
           </td>
-          <td colspan="3">
-            <input size="55" type="text" name="endereco">
+          <td>
+            <input placeholder="Número" type="text" name="num">
+          </td>
+          <td>
+            <input placeholder="Complemento" type="text" name="compl">
+          </td>
+        </tr>
+    
+        <tr>
+          <td>
+            <input placeholder="Bairro" type="text" name="bairro">
+          </td>
+          <td>
+            <input placeholder="Cidade" type="text" name="cidade">
+          </td>
+          <td>
+            <input placeholder="Estado" type="text" name="estado">
           </td>
         </tr>
 
         <tr>
           <td>
-            <label for="sexo">Sexo:</label>
-          </td>
-          <td>
-            <select placeholder="Selecione" id="sexo" name="sexo">
-              <option selected="selected"></option>
+            <select placeholder="Selecione" name="sexo">
+              <option value="" hidden disabled selected>Gênero</option>
               <option value="Masculino">Masculino</option>
               <option value="Feminino">Feminino</option>
             </select>
           </td>
           <td>
-            <label for="nascimento">Data de Nascimento:</label>
-          </td>
-          <td>
-            <input size="13" type="date" id="nascimento">
+            <input placeholder="Data de Nascimento" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" id="date" />
           </td>
         </tr>
 
         <tr>
-          <td>
-            <label for="situacao">Situação Civil:</label>
-          </td>
           <td>
             <input type="radio" id="solteir" name="situacao" value="Solteiro">
             <label for="html">Solteiro</label>
@@ -84,7 +86,8 @@
         </tr>
 
         <tr>
-          <td colspan="4" align="center">
+          <td align="center">
+            <button type="submit">Enviar</button>
             <button type="button" onclick="limparForm()">Limpar Dados</button>
           </td>
         </tr>
@@ -92,7 +95,168 @@
     </table>
   </div>
 
+  <!-- Div da Tabela de Dados -->
+  <div class="tableContainer">
+    <h1>Clientes Registrados</h1>
+
+    <table class="tabelaDados" cellspacing="2px" cellpadding="2px">
+      <thead>
+        <tr class="header">
+          <th>Nome</th>
+          <th>RG</th>
+          <th>CPF</th>
+          <th>CEP</th>
+          <th>Rua</th>
+          <th>Número</th>
+          <th>Complemento</th>
+          <th>Bairro</th>
+          <th>Cidade</th>
+          <th>Estado</th>
+          <th>Sexo</th>
+          <th>Data de Nasc.</th>
+          <th>Situação Civil</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Pedro Mateus</td>
+          <td>290999572</td>
+          <td>16278645718</td>
+          <td>20735240</td>
+          <td>Rua Santos Titara</td>
+          <td>126</td>
+          <td>Apto 301</td>
+          <td>Todos os Santos</td>
+          <td>Rio de Janeiro</td>
+          <td>RJ</td>
+          <td>Masculino</td>
+          <td>18/02/1997</td>
+          <td>Solteiro</td>
+        </tr>
+        <tr>
+          <td>Pedro Mateus</td>
+          <td>290999572</td>
+          <td>16278645718</td>
+          <td>20735240</td>
+          <td>Rua Santos Titara</td>
+          <td>126</td>
+          <td>Apto 301</td>
+          <td>Todos os Santos</td>
+          <td>Rio de Janeiro</td>
+          <td>RJ</td>
+          <td>Masculino</td>
+          <td>18/02/1997</td>
+          <td>Solteiro</td>
+        </tr>
+        <tr>
+          <td>Pedro Mateus</td>
+          <td>290999572</td>
+          <td>16278645718</td>
+          <td>20735240</td>
+          <td>Rua Santos Titara</td>
+          <td>126</td>
+          <td>Apto 301</td>
+          <td>Todos os Santos</td>
+          <td>Rio de Janeiro</td>
+          <td>RJ</td>
+          <td>Masculino</td>
+          <td>18/02/1997</td>
+          <td>Solteiro</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Chamada do script -->
   <script src="scripts/main.js"></script>
 </body>
 
 </html>
+
+
+<!-- <div class="formContainer">
+  <h1>Ficha Cadastral</h1>
+
+  <table class="tabela" cellspacing="1px" cellpadding="1px">
+    <form>
+      <tr>
+        <td>
+          <label for="name">Nome:</label>
+        </td>
+        <td colspan="3">
+          <input size="55" placeholder="Nome Completo" type="text" id="name">
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <label for="rg">RG:</label>
+        </td>
+        <td>
+          <input size="13" type="text" id="rg">
+        </td>
+        <td>
+          <label for="cpf">C.P.F.:</label>
+        </td>
+        <td>
+          <input size="13" type="text" name="cpf">
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <label for="endereco">Endereço:</label>
+        </td>
+        <td colspan="3">
+          <input size="55" type="text" name="endereco">
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <label for="sexo">Sexo:</label>
+        </td>
+        <td>
+          <select placeholder="Selecione" id="sexo" name="sexo">
+            <option selected="selected"></option>
+            <option value="Masculino">Masculino</option>
+            <option value="Feminino">Feminino</option>
+          </select>
+        </td>
+        <td>
+          <label for="nascimento">Data de Nascimento:</label>
+        </td>
+        <td>
+          <input size="13" type="date" id="nascimento">
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <label for="situacao">Situação Civil:</label>
+        </td>
+        <td>
+          <input type="radio" id="solteir" name="situacao" value="Solteiro">
+          <label for="html">Solteiro</label>
+        </td>
+        <td>
+          <input type="radio" id="casad" name="situacao" value="Casado(a)">
+          <label for="casad">Casado(a)</label>
+        </td>
+        <td>
+          <input type="radio" id="viuv" name="situacao" value="Viúvo(a)">
+          <label for="viuv">Viúvo(a)</label>
+        </td>
+      </tr>
+
+      <tr>
+        <td colspan="2" align="center">
+          <button type="submit">Enviar</button>
+        </td>
+        <td colspan="2" align="center">
+          <button type="button" onclick="limparForm()">Limpar Dados</button>
+        </td>
+      </tr>
+    </form>
+  </table>
+</div> -->
