@@ -21,17 +21,16 @@
 
         <tr>
           <td colspan="2">
-            <input size="42" placeholder="Nome Completo" type="text" maxlength="80" name="nome" required>
+            <input type="text" placeholder="Nome Completo" size="42" maxlength="80" id="nome" required>
           </td align="center">
           <td>
-            <input placeholder="Data de Nascimento" type="text" onfocus="(this.type='date')" id="date" required />
+            <input type="text" placeholder="Data de Nascimento" onfocus="(this.type='date')" id="nascimento" required />
           </td>
-
         </tr>
 
         <tr>
           <td>
-            <select placeholder="Selecione" name="sexo" required>
+            <select placeholder="Selecione" id="genero" required>
               <option value="" hidden disabled selected>Gênero</option>
               <option value="Masculino">Masculino</option>
               <option value="Feminino">Feminino</option>
@@ -39,15 +38,15 @@
           </td>
           <td colspan="2" class="radioButtons">
             <label class="radioLabel">
-              <input type="radio" class="radio" name="situacao" value="Solteiro(a)" required>
+              <input type="radio" name="situacao" value="Solteiro(a)" id="radio" required>
               Solteiro(a)
             </label>
             <label class="radioLabel">
-              <input type="radio" class="radio" name="situacao" value="Casado(a)">
+              <input type="radio" name="situacao" value="Casado(a)">
               Casado(a)
             </label>
             <label class="radioLabel">
-              <input type="radio" class="radio" name="situacao" value="Viúvo(a)">
+              <input type="radio" name="situacao" value="Viúvo(a)">
               Viúvo(a)
             </label>
           </td>
@@ -55,37 +54,37 @@
 
         <tr>
           <td>
-            <input size="14" maxlength="14" placeholder="CPF" type="text" name="cpf" required>
+            <input type="text" placeholder="CPF" onchange="formatCPF()" maxlength="14" size="14" id="cpf" required>
           </td>
           <td>
-            <input size="10" maxlength="9" placeholder="RG" type="text" name="rg" required>
+            <input type="text" placeholder="RG" maxlength="9" size="10" id="rg" required>
           </td>
           <td>
-            <input size="10" maxlength="8" placeholder="CEP" type="text" name="cep" required>
-          </td>
-        </tr>
-
-        <tr>
-          <td>
-            <input placeholder="Rua" type="text" name="rua" readonly>
-          </td>
-          <td>
-            <input size="5" placeholder="Núm." type="text" name="num" required>
-          </td>
-          <td>
-            <input placeholder="Complemento" type="text" name="compl">
+            <input type="text" placeholder="CEP" onfocusout="getCEP()" maxlength="8" size="10" id="cep" required>
           </td>
         </tr>
 
         <tr>
           <td>
-            <input placeholder="Bairro" type="text" name="bairro" readonly>
+            <input type="text" placeholder="Rua" id="rua" readonly>
           </td>
           <td>
-            <input placeholder="Cidade" type="text" name="cidade" readonly>
+            <input type="text" placeholder="Núm." size="5" id="num" required>
           </td>
           <td>
-            <input size="1" placeholder="UF" type="text" name="estado" readonly>
+            <input type="text" placeholder="Complemento" id="compl">
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            <input type="text" placeholder="Bairro" id="bairro" readonly>
+          </td>
+          <td>
+            <input type="text" placeholder="Cidade" id="cidade" readonly>
+          </td>
+          <td>
+            <input type="text" placeholder="UF" size="1" id="estado" readonly>
           </td>
         </tr>
 
