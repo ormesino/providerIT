@@ -4,7 +4,7 @@ body {
   background-color: #2E2732;
   font-family: 'Quicksand', sans-serif;
   font-size: 14px;
-  color: #2E2732;
+  color: #f8f5f8;
 }
 
 /* Centralização da tabela e formulário */
@@ -87,13 +87,13 @@ select option {
   color: #fff;
 }
 
-#date {
+#nascimento {
   width: 136px;
   height: 18px;
   cursor: pointer;
 }
 
-#date, input::-webkit-calendar-picker-indicator {
+#nascimento, input::-webkit-calendar-picker-indicator {
   cursor: pointer;
 }
 
@@ -142,6 +142,7 @@ button:hover {
   overflow: hidden;
   width: 1600px;
   white-space: nowrap;
+  color: #2E2732;
 }
 
 .header {
@@ -167,5 +168,25 @@ button:hover {
 }
 
 .dataTable tbody tr:last-of-type {
-  border-bottom: 5px solid #5B2DD1;
+  border-bottom: 5px solid #6631ED;
+}
+
+.btnDelete {
+  margin: 20px 0;
+  padding: 10px 20px;
+  background-color: #f8f5f8;
+  border: none;
+  border-radius: 32px;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  color: #2E2732;
+  cursor: pointer;
+}
+
+.btnDelete:hover {
+  transition: all .2s ease-in-out;
+  background-color: #e60000;
+  color: #f8f5f8;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }

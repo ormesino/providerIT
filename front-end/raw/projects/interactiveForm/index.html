@@ -12,7 +12,7 @@
   <!-- Div do form -->
   <div class="formContainer">
     <table class="formTable" cellspacing="1px" cellpadding="1px">
-      <form>
+      <form onsubmit="saveData()">
         <tr>
           <td colspan="3" align="center">
             <h1>Cadastro</h1>
@@ -91,7 +91,7 @@
         <tr>
           <td class="btnPlace" colspan="3" align="center">
             <button type="submit">Enviar</button>
-            <button type="button" onclick="cleanForm()">Limpar Campos</button>
+            <button type="button" onclick="clearForm()">Limpar Campos</button>
           </td>
         </tr>
       </form>
@@ -121,23 +121,10 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>Pedro Mateus Melo Ormesino Lins</td>
-          <td>290999572</td>
-          <td>162.786.457-18</td>
-          <td>20735-240</td>
-          <td>Rua Santos Titara</td>
-          <td>126</td>
-          <td>Apto 301</td>
-          <td>Todos os Santos</td>
-          <td>Rio de Janeiro</td>
-          <td>RJ</td>
-          <td>Masculino</td>
-          <td>18/02/1997</td>
-          <td>Solteiro(a)</td>
-        </tr>
       </tbody>
     </table>
+
+    <button type="button" class="btnDelete" onclick="clearDB()">Excluir Registros</button>
   </div>
 
   <!-- Chamada do script -->
