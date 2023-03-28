@@ -23,6 +23,7 @@ db.transaction(tx => {
 
       //  Preencher a tabela com os dados do banco de dados
       for (let i = 0; i < registros; i++) {
+        let nascimento = results.rows.item(i).nascimento;
         tabela.innerHTML += `
           <tr>
             <td>${results.rows.item(i).nome}</td>
@@ -36,7 +37,7 @@ db.transaction(tx => {
             <td>${results.rows.item(i).cidade}</td>
             <td>${results.rows.item(i).estado}</td>
             <td>${results.rows.item(i).genero}</td>
-            <td>${results.rows.item(i).nascimento}</td>
+            <td>${nascimento.slice(8, 10)}/${nascimento.slice(5, 7)}/${nascimento.slice(0, 4)}</td>
             <td>${results.rows.item(i).situacao}</td>
           </tr>
         `
