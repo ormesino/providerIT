@@ -12,7 +12,7 @@ db.transaction(tx => {
   db.transaction(tx => {
     tx.executeSql('SELECT * FROM REGISTROS', [], (tx, results) => {
       let registros = results.rows.length;
-      let tableBody = document.querySelector('.dataTable tbody');
+      let tabela = document.querySelector('.dataTable tbody');
 
       //  Esconder a tabela caso não haja registros
       if (registros === 0) {
@@ -23,7 +23,7 @@ db.transaction(tx => {
 
       //  Preencher a tabela com os dados do banco de dados
       for (let i = 0; i < registros; i++) {
-        tableBody.innerHTML += `
+        tabela.innerHTML += `
           <tr>
             <td>${results.rows.item(i).nome}</td>
             <td>${results.rows.item(i).rg}</td>
@@ -52,6 +52,7 @@ function getCEP() {
   let cep = document.querySelector('#cep').value;
   let url = `https://viacep.com.br/ws/${cep}/json/`;
 
+  //  Chamada da API e inserção dos dados recebidos nos campos do formulário
   if (cep.length !== 0) {
     fetch(url)
       .then((response) => {
@@ -77,11 +78,44 @@ function getCEP() {
   }
 }
 
+//  Função para validar o CPF
+function validateCPF() {
+  let cpf = document.querySelector('#cpf').value;
+  let soma = 0;
+  let resto;
+
+  if (cpf.length === 11 && cpf != "00000000000") {
+    for (let i = 0; i < 9; i++) {
+      soma += parseInt(cpf[i]) * (10 - i);
+    }
+    resto = (soma * 10) % 11;
+    if (resto === 10) resto = 0;
+    if (resto != parseInt(cpf[9])) return false;
+
+    soma = 0;
+    for (let i = 0; i < 10; i++) {
+      soma += parseInt(cpf[i]) * (11 - i);
+    }
+    resto = (soma * 10) % 11;
+    if (resto === 10) resto = 0;
+    if (resto != parseInt(cpf[10])) return false;
+
+    return true;
+  } else {
+    return false;
+  }
+}
+
 //  Função para formatar o CPF
 function formatCPF() {
   let cpf = document.querySelector('#cpf').value;
-  let cpfFormat = cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
-  document.querySelector('#cpf').value = cpfFormat;
+  if (validateCPF()) {
+    let cpfFormat = cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+    document.querySelector('#cpf').value = cpfFormat;
+  } else {
+    document.querySelector('#cpf').value = '';
+    alert('Digite um CPF válido!');
+  }
 }
 
 //  Função para limpar os campos do formulário
