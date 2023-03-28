@@ -119,6 +119,15 @@ function formatCPF() {
   }
 }
 
+//  Função para definir limites para a data de nascimento
+function formatDate() {
+  let today = new Date();
+  today.setDate(today.getDate() - 1);
+  let formatedDate = today.toISOString().split('T')[0];
+  document.querySelector('#nascimento').setAttribute('max', formatedDate);
+  document.querySelector('#nascimento').setAttribute('min', '1910-01-01');
+}
+
 //  Função para limpar os campos do formulário
 function clearForm() {
   let inputs = document.querySelectorAll("input");
