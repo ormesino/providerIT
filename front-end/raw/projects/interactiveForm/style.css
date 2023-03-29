@@ -114,7 +114,7 @@ input[type="radio"] {
   height: 100px;
 }
 
-button {
+.inputBtn {
   margin: 0 5px;
   padding: 10px 20px;
   background-color: #f8f5f8;
@@ -127,7 +127,7 @@ button {
   cursor: pointer;
 }
 
-button:hover {
+.inputBtn:hover {
   transition: all .2s ease-in-out;
   background-color: #2E2732;
   color: #f8f5f8;
@@ -176,7 +176,8 @@ button:hover {
   padding: 20px 0;
 }
 
-.btnDelete {
+.btnDelClient {
+  margin: 0 5px;
   padding: 10px 20px;
   background-color: #f8f5f8;
   border: none;
@@ -188,9 +189,27 @@ button:hover {
   cursor: pointer;
 }
 
-.btnDelete:hover {
+.btnDelClient:hover {
   transition: all .2s ease-in-out;
-  background-color: #e60000;
+  background-color: #6631ED;
   color: #f8f5f8;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.btnDelDB {
+  background-color: #da0000;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 32px;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  color: #f8f5f8;
+  cursor: pointer;
+}
+
+.btnDelDB:hover {
+  transition: all .2s ease-in-out;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  background-color: #ff0000;
 }

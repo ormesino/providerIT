@@ -218,13 +218,29 @@ function saveData() {
 
 //  Função para deleter um registro do banco de dados
 function deleteData() {
-  let id = prompt('Digite o ID do registro que deseja deletar:');
-  db.transaction(tx => {
-    tx.executeSql('DELETE FROM REGISTROS WHERE id = ?', [id]);
-  }, e => {
-    console.log(e);
-  });
-  window.location.reload();
+  let id = prompt('Digite o ID do registro que deseja excluir:');
+  if (id !== null) {
+    db.transaction(tx => {
+      tx.executeSql('SELECT * FROM REGISTROS WHERE id = ?', [id], (tx, results) => {
+        if (results.rows.length === 0) {
+          alert('Registro não encontrado.');
+          return;
+        } else {
+          let confirm = window.confirm('Tem certeza que deseja excluir este registro?');
+          if (confirm) {
+            db.transaction(tx => {
+              tx.executeSql('DELETE FROM REGISTROS WHERE id = ?', [id])
+            }, e => {
+              console.log(e);
+            });
+            window.location.reload();
+          }
+        }
+      })
+    }, e => {
+      console.log(e);
+    });
+  }
 }
 
 //  Função para limpar o banco de dados
