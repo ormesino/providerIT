@@ -77,7 +77,6 @@ select {
 
 select:focus {
   transition: all .2s ease-in-out; 
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   outline: none;
   background-color: #dfdfdf; 
 }
@@ -100,6 +99,7 @@ select option {
 .radioLabel {
   display: inline-flex;
   font-weight: bold;
+  cursor: pointer;
 }
 
 input[type="radio"] {
@@ -107,6 +107,7 @@ input[type="radio"] {
   height: 18px;
   width: 18px;
   accent-color: #2E2732;
+  cursor: pointer;
 }
 
 .btnPlace {
@@ -114,7 +115,7 @@ input[type="radio"] {
 }
 
 button {
-  margin: 0 10px;
+  margin: 0 5px;
   padding: 10px 20px;
   background-color: #f8f5f8;
   border: none;
@@ -171,8 +172,11 @@ button:hover {
   border-bottom: 5px solid #6631ED;
 }
 
+.btnDeletePlace {
+  padding: 20px 0;
+}
+
 .btnDelete {
-  margin: 20px 0;
   padding: 10px 20px;
   background-color: #f8f5f8;
   border: none;

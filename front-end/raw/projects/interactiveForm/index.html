@@ -21,7 +21,7 @@
 
         <tr>
           <td colspan="2">
-            <input type="text" placeholder="Nome Completo" size="42" maxlength="80" id="nome" required>
+            <input type="text" placeholder="Nome Completo" onfocusout="checkName()" size="42" maxlength="80" id="nome" required>
           </td align="center">
           <td>
             <input type="text" placeholder="Data de Nascimento" onfocus="(this.type='date') && formatDate()" id="nascimento" required />
@@ -99,12 +99,13 @@
   </div>
 
   <!-- Div da Tabela de Dados -->
-  <div class="tableContainer">
+  <div class="tableContainer" style="visibility: hidden;">
     <h2>Clientes Registrados</h2>
 
     <table class="dataTable" cellspacing="2px" cellpadding="2px">
       <thead>
         <tr class="header">
+          <th>ID</th>
           <th>Nome Completo</th>
           <th>RG</th>
           <th>CPF</th>
@@ -124,7 +125,10 @@
       </tbody>
     </table>
 
-    <button type="button" class="btnDelete" onclick="clearDB()">Excluir Registros</button>
+    <div class="btnDeletePlace">
+      <button type="button" class="btnDelete" onclick="clearDB()">Apagar Tabela</button>
+      <button type="button" class="btnDelete" onclick="deleteData()">Excluir Registro</button>
+    </div>
   </div>
 
   <!-- Chamada do script -->

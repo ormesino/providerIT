@@ -2,7 +2,7 @@
 const db = window.openDatabase('db', '1.0', 'Test DB', 2 * 1024 * 1024);
 
 db.transaction(tx => {
-  tx.executeSql('CREATE TABLE IF NOT EXISTS REGISTROS (nome, nascimento, genero, situacao, cpf, rg, cep, rua, num, compl, bairro, cidade, estado)')
+  tx.executeSql('CREATE TABLE IF NOT EXISTS REGISTROS (id INTEGER PRIMARY KEY, nome, nascimento, genero, situacao, cpf, rg, cep, rua, num, compl, bairro, cidade, estado)')
 }, e => {
   console.log(e);
 });
@@ -26,6 +26,7 @@ db.transaction(tx => {
         let nascimento = results.rows.item(i).nascimento;
         tabela.innerHTML += `
           <tr>
+            <td>${results.rows.item(i).id}</td>
             <td>${results.rows.item(i).nome}</td>
             <td>${results.rows.item(i).rg}</td>
             <td>${results.rows.item(i).cpf}</td>
@@ -45,6 +46,46 @@ db.transaction(tx => {
     })
   }, e => {
     console.log(e);
+  });
+})();
+
+//  Função para permitir apenas letras no campo de nome completo
+(function onlyLetters() {
+  let input = document.querySelector('#nome');
+  input.addEventListener('keypress', (e) => {
+    let isString = isNaN(parseInt(e.key));
+    if (isString) {
+      return;
+    } else {
+      e.preventDefault();
+    }
+  });
+})();
+
+//  Função para obrigar o prenchimento de dois nomes no mínimo, exibindo uma mensagem caso o usuário tente enviar o formulário sem preencher o campo
+function checkName() {
+  let input = document.querySelector('#nome');
+  if (input.value.length > 0) {
+    let names = input.value.split(' ');
+    if (names.length < 2 || names[0].length < 3 || names[1].length < 3) {
+      alert('Por favor, preencha o campo "Nome Completo" com ao menos um nome e um sobrenome.');
+      input.value = "";
+      input.focus();
+    }
+  }
+}
+
+//  Função para permitir apenas números nos campos de CPF, RG, CEP e número
+(function onlyNumbers() {
+  let inputs = document.querySelectorAll('input');
+  inputs.forEach((input) => {
+    if (input.id === 'cpf' || input.id === 'rg' || input.id === 'cep' || input.id === 'num') {
+      input.addEventListener('keypress', (e) => {
+        if (isNaN(e.key) || e.key === ' ') {
+          e.preventDefault();
+        }
+      })
+    }
   });
 })();
 
@@ -75,6 +116,7 @@ function getCEP() {
         document.querySelector('#bairro').value = "";
         document.querySelector('#cidade').value = "";
         document.querySelector('#estado').value = "";
+        document.querySelector('#cep').focus();
       });
   }
 }
@@ -116,6 +158,7 @@ function formatCPF() {
   } else {
     document.querySelector('#cpf').value = '';
     alert('Digite um CPF válido!');
+    document.querySelector('#cpf').focus();
   }
 }
 
@@ -173,12 +216,26 @@ function saveData() {
   });
 }
 
-//  Função para limpar o banco de dados
-function clearDB() {
+//  Função para deleter um registro do banco de dados
+function deleteData() {
+  let id = prompt('Digite o ID do registro que deseja deletar:');
   db.transaction(tx => {
-    tx.executeSql('DROP TABLE REGISTROS')
+    tx.executeSql('DELETE FROM REGISTROS WHERE id = ?', [id]);
   }, e => {
     console.log(e);
   });
   window.location.reload();
+}
+
+//  Função para limpar o banco de dados
+function clearDB() {
+  let confirm = window.confirm('Tem certeza que deseja limpar o banco de dados?');
+  if (confirm) {
+    db.transaction(tx => {
+      tx.executeSql('DROP TABLE REGISTROS')
+    }, e => {
+      console.log(e);
+    });
+    window.location.reload();
+  }
 }
