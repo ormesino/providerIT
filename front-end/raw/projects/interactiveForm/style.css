@@ -156,7 +156,7 @@ input[type="radio"] {
 }
 
 .dataTable td, .header {
-  padding: 10px 0;
+  padding: 8px 0;
   text-align: center;
 }
 
@@ -170,10 +170,6 @@ input[type="radio"] {
 
 .dataTable tbody tr:last-of-type {
   border-bottom: 5px solid #6631ED;
-}
-
-.btnDeletePlace {
-  padding: 20px 0;
 }
 
 .btnDelClient {
@@ -197,6 +193,7 @@ input[type="radio"] {
 }
 
 .btnDelDB {
+  margin: 15px 0 0 0;
   background-color: #da0000;
   padding: 10px 20px;
   border: none;
@@ -212,4 +209,22 @@ input[type="radio"] {
   transition: all .2s ease-in-out;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   background-color: #ff0000;
+}
+
+.btnDelClient {
+  transition: all .2s ease-in-out;
+  background-color: #f8f5f8;
+  padding: 10px 20px;
+  border: 2px solid #da0000;
+  border-radius: 32px;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  color: #da0000;
+  cursor: pointer;
+}
+
+.btnDelClient:hover {
+  background-color: #da0000;
+  color: #f8f5f8;
 }
