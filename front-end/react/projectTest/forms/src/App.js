@@ -58,7 +58,7 @@ export default class App extends Component {
           </select>
           <br />
 
-          <input type="submit" value="Register" />
+          <button type="submit">Register</button>
         </form>
       </>
     );
