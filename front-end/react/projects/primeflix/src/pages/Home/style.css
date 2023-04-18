@@ -1,0 +1,30 @@
+.movieList {
+  max-width: 800px;
+  margin: 14px auto;
+}
+
+.movieList article {
+  margin: 20px 0;
+  padding: 50px;
+  width: 100%;
+  background-color: black;
+  padding: 15px 0;
+  border-radius: 10px;
+  color: white;
+  font-size: 25px;
+  text-align: center;
+}
+
+.movieList img {
+  margin-top: 20px;
+  width: 900px;
+  max-width: 100%;
+  max-height: 500px;
+  object-fit: cover;
+}
+
+.movieList a{
+  text-decoration: none;
+  font-size: 20px;
+  color: white;
+}
