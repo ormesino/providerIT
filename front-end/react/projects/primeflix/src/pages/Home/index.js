@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-
 import './style.css';
 
 import api from '../../services/api';
 
+import CardMovie from '../../components/CardMovie';
+
 function Home() {
   const [movies, setMovies] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getMovies = async () => {
@@ -14,30 +15,33 @@ function Home() {
         params: {
           api_key: 'ae505c79ac6e602726dd10dcae3a0c69',
           language: 'pt-BR',
-          page: 1,
+          page: 1
         }
       });
 
       setMovies(response.data.results);
+      setLoading(false);
     };
 
     getMovies();
   }, []);
 
-  return (
-    <section className="list">
-      <div className="movieContainer">
-        {movies.map(movie => (
-          <Link to={`/movie/${movie.id}`}>
-            <article key={movie.id}>
-              <p>{movie.title}</p>
-              <img src={`https://image.tmdb.org/t/p/original/${movie.poster_path}`} alt={movie.title} />
-            </article>
-          </Link>
-        ))}
-      </div>
-    </section>
+  if (loading) {
+    return (
+      <h2 className='loading'>
+        Carregando os filmes...
+      </h2>
+    );
+  }
 
+  return (
+    <div className="list">
+      {movies.length > 0 && movies.map(movie => {
+        return (
+          <CardMovie key={movie.id} id={movie.id} title={movie.title} poster={movie.poster_path} stars={movie.vote_average} />
+        );
+      })}
+    </div>
   );
 }
 

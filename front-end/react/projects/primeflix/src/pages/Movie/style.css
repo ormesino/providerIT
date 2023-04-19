@@ -1,0 +1,19 @@
+.loading {
+  height: calc(100vh - 200px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 50px 0 0 0;
+  color: #361d32;
+}
+
+.detailCard {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 900px;
+}
+
+.detailCard img {
+  max-width: 100%;
+}

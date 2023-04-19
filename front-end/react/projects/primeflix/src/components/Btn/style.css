@@ -4,7 +4,7 @@
   color: #f1e8e6;
   padding: 10px 15px;
   text-align: center;
-  font-size: 16px;
+  font-size: 14px;
   cursor: pointer;
   font-weight: bold;
   border-radius: 8px;
@@ -12,7 +12,8 @@
 
 .btnAccount:hover {
   transition: ease-in-out 0.2s;
-  background-color: #f55951cb;
+  color: #f55951;
+  background-color: #f1e8e6;
 }
 
 .btnFavorites {
@@ -21,7 +22,7 @@
   color: #f1e8e6;
   padding: 10px 15px;
   text-align: center;
-  font-size: 16px;
+  font-size: 14px;
   cursor: pointer;
   font-weight: bold;
   border-radius: 8px;

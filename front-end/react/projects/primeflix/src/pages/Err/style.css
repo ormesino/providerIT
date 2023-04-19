@@ -1,0 +1,21 @@
+.erroContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 50px 0 0 0;
+  gap: 1.5rem;
+  height: calc(100vh - 200px);
+}
+
+.error {
+  color: #f55951;
+  padding: 10px;
+  background-color: #f1e8e6;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+.message {
+  color: #361d32;
+}
