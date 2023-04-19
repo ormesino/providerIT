@@ -2,11 +2,11 @@
   padding: 0;
   margin: 0;
   box-sizing: border-box;
+  font-family: 'Roboto', Arial, Helvetica, sans-serif;
 }
 
 body {
-  font-family: 'Roboto', sans-serif;
-  background-color: #1f192f;
+  background-color: #edd2cb;
 }
 
 .app {

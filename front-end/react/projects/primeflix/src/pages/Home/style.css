@@ -1,27 +1,36 @@
-.movieList {
-  max-width: 800px;
-  margin: 14px auto;
+.list {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 30px 0;
 }
 
-.movieList article {
-  margin: 20px 0;
+.movieContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
   width: 100%;
-  background-color: #65b8a6;
-  padding: 15px 0;
+  max-width: 1500px;
+}
+
+.movieContainer article {
+  width: 100%;
+  background-color: #361d32;
   border-radius: 10px;
   font-size: 25px;
   text-align: center;
 }
 
-.movieList img {
-  width: 900px;
-  max-width: 100%;
+.movieContainer img {
+  width: 100%;
+  max-width: 500px;
   max-height: 500px;
-  object-fit: cover;
+  object-fit: contain;
 }
 
-.movieList a{
+.movieContainer a{
   text-decoration: none;
   font-size: 20px;
-  color: black;
+  color: #f1e8e6;
 }

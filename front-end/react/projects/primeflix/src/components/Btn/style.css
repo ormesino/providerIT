@@ -1,35 +1,33 @@
+.btnAccount {
+  background-color: #f55951;
+  border: none;
+  color: #f1e8e6;
+  padding: 10px 15px;
+  text-align: center;
+  font-size: 16px;
+  cursor: pointer;
+  font-weight: bold;
+  border-radius: 8px;
+}
+
+.btnAccount:hover {
+  transition: ease-in-out 0.2s;
+  background-color: #f55951cb;
+}
+
 .btnFavorites {
-  background-color: black;
+  background-color: #361d32;
   border: none;
-  color: white;
+  color: #f1e8e6;
   padding: 10px 15px;
   text-align: center;
-  text-decoration: none;
   font-size: 16px;
   cursor: pointer;
   font-weight: bold;
   border-radius: 8px;
-}
-
-.btnLogin {
-  background-color: white;
-  border: none;
-  color: black;
-  padding: 10px 15px;
-  text-align: center;
-  text-decoration: none;
-  font-size: 16px;
-  cursor: pointer;
-  font-weight: bold;
-  border-radius: 8px;
-}
-
-.btnLogin:hover {
-  background-color: #e4e4e4;
 }
 
 .btnFavorites:hover {
-  background-color: rgb(46, 46, 46);
+  transition: ease-in-out 0.2s;
+  background-color: #543c52;
 }
-
-

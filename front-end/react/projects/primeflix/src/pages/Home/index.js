@@ -25,16 +25,19 @@ function Home() {
   }, []);
 
   return (
-    <div className="movieList">
-      {movies.map(movie => (
-        <Link to={`/movie/${movie.id}`}>
-          <article key={movie.id}>
-            <h3>{movie.title}</h3>
-            <img src={`https://image.tmdb.org/t/p/original/${movie.poster_path}`} alt={movie.title} />
-          </article>
-        </Link>
-      ))}
-    </div>
+    <section className="list">
+      <div className="movieContainer">
+        {movies.map(movie => (
+          <Link to={`/movie/${movie.id}`}>
+            <article key={movie.id}>
+              <p>{movie.title}</p>
+              <img src={`https://image.tmdb.org/t/p/original/${movie.poster_path}`} alt={movie.title} />
+            </article>
+          </Link>
+        ))}
+      </div>
+    </section>
+
   );
 }
 

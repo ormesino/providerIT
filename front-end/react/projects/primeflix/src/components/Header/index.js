@@ -8,15 +8,14 @@ function Header() {
     <header>
       <Link className="logo" to="/">
         <img src={Logo} alt="Logo da plataforma" />
-        <p className="title">Prime Flix</p>
       </Link>
 
       <div className="buttons">
         <Link to="/favoritos">
           <Btn title="Favoritos" />
         </Link>
-        <Link to="/entrar">
-          <Btn title="Entrar" />
+        <Link to="/conta">
+          <Btn title="Minha Conta" />
         </Link>
       </div>
     </header>

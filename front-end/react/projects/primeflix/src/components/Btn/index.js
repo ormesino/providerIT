@@ -9,7 +9,7 @@ function Btn(props) {
             {props.title}
           </button>
           :
-          <button className="btnLogin">
+          <button className="btnAccount">
             {props.title}
           </button>
       }
