@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import "./style.css"
 
@@ -18,6 +19,7 @@ function Favorites() {
     });
     localStorage.setItem("@primeflix", JSON.stringify(filteredMovies));
     setMovies(filteredMovies);
+    toast.success(`Filme retirado dos favoritos. 👋`);
   }
 
   return (

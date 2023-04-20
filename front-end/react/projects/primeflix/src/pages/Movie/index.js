@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify'
 
 import './style.css';
 
@@ -39,12 +40,13 @@ function Movie() {
     const hasMovie = favoritedMovies.some((saved) => saved.id === details.id);
 
     if (hasMovie) {
-      alert("Filme já favoritado!");
+      toast.warn("Filme já favoritado. 😥");
       return;
     }
 
     favoritedMovies.push(details);
     localStorage.setItem("@primeflix", JSON.stringify(favoritedMovies));
+    toast.success("Filme favoritado com sucesso! 🎉");
   }
 
   if (loading) {
