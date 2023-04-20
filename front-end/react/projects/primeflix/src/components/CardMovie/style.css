@@ -1,11 +1,11 @@
 .link {
   text-decoration: none;
   color: #f1e8e6;
+  margin: 1rem;
 }
 
 .movie {
   background-color: #361d32;
-  margin: 1rem;
   width: 250px;
   height: 450px;
   border-radius: 5px;
