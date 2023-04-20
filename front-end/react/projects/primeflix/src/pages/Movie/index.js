@@ -24,7 +24,7 @@ function Movie() {
           setLoading(false);
         })
         .catch(() => {
-          navigate('/', { replace: true });
+          navigate('*', { replace: true });
           return;
         });
     };
