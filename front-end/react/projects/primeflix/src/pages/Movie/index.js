@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 import './style.css';
 
@@ -7,6 +7,7 @@ import api from '../../services/api';
 
 function Movie() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [details, setDetails] = useState({});
   const [loading, setLoading] = useState(true);
 
@@ -22,13 +23,14 @@ function Movie() {
           setDetails(response.data);
           setLoading(false);
         })
-        .catch((error) => {
-          console.log(error);
+        .catch(() => {
+          navigate('/', { replace: true });
+          return;
         });
     };
 
     loadMovie();
-  }, [id]);
+  }, [navigate, id]);
 
   function favoriteMovie() {
     const myList = localStorage.getItem("@primeflix");
