@@ -1,19 +1,69 @@
 .loading {
-  height: calc(100vh - 200px);
+  height: calc(100vh - 5rem);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 50px 0 0 0;
   color: #361d32;
 }
 
-.detailCard {
+.movieCard {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 900px;
+  flex-direction: column;
+  margin: 3rem auto 3rem auto;
+  max-width: 800px;
+  padding: 2rem 3rem;
+  background-color: #361d32;
+  border-radius: 8px;
+  color: #f1e8e6;
 }
 
-.detailCard img {
+.movieCard h1{
+  align-self: center;
+  margin-bottom: 1rem;
+}
+
+.movieCard img {
+  object-fit: contain;
+  border-radius: 8px;
   max-width: 100%;
+  margin-bottom: 1rem;
+}
+
+.movieCard span {
+  margin: 0.5rem 0;
+}
+
+.movieButtons {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.movieButtons button {
+  font-size: 16px;
+  padding: 8px 20px;
+  border: none;
+  border-radius: 32px;
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: 600;
+  color: #f55951;
+  background-color: #f1e8e6;
+}
+
+.movieButtons button:hover {
+  transition: ease-in-out 0.2s;
+  color: #f1e8e6;
+  background-color: #f55951;
+}
+
+.movieButtons a {
+  text-decoration: none;
+  color: #f55951;
+}
+
+.movieButtons a:hover {
+  text-decoration: none;
+  color: #f1e8e6;
 }

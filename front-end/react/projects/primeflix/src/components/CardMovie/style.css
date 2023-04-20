@@ -1,4 +1,4 @@
-a {
+.link {
   text-decoration: none;
   color: #f1e8e6;
 }
@@ -43,7 +43,7 @@ a {
   text-overflow: ellipsis;
 }
 
-span {
+.movieInfo span {
   background-color: #543c52;
   border-radius: 5px;
   padding: 0.5rem;

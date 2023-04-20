@@ -14,7 +14,7 @@ function CardMovie(props) {
   }
 
   return (
-    <Link to={`/movie/${props.id}`}>
+    <Link className="link" to={`/movie/${props.id}`}>
       <div className="movie">
         <img src={`https://image.tmdb.org/t/p/original${props.poster}`} alt={props.title} />
         <div className="movieInfo">

@@ -29,7 +29,7 @@ function Home() {
   if (loading) {
     return (
       <h2 className='loading'>
-        Carregando os filmes...
+        Carregando os filmes...⏳
       </h2>
     );
   }

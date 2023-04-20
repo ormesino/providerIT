@@ -11,7 +11,7 @@ function Header() {
       </Link>
 
       <div className="buttons">
-        <Link to="/favoritos">
+        <Link to="/favorites">
           <Btn title="Favoritos" />
         </Link>
         <Link to="/conta">

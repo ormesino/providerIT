@@ -2,7 +2,7 @@ import './style.css';
 
 function Btn(props) {
   return (
-    <>
+    <div>
       {
         (props.title === "Favoritos") ?
           <button className="btnFavorites">
@@ -13,7 +13,7 @@ function Btn(props) {
             {props.title}
           </button>
       }
-    </>
+    </div>
   );
 }
 

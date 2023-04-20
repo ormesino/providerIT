@@ -19,8 +19,7 @@ function Movie() {
         }
       })
         .then((response) => {
-          console.log(response.data);
-          setDetails(response.data)
+          setDetails(response.data);
           setLoading(false);
         })
         .catch((error) => {
@@ -29,28 +28,45 @@ function Movie() {
     };
 
     loadMovie();
-  }, []);
+  }, [id]);
+
+  function favoriteMovie() {
+    const myList = localStorage.getItem("@primeflix");
+
+    let favoritedMovies = JSON.parse(myList) || [];
+    const hasMovie = favoritedMovies.some((saved) => saved.id === details.id);
+
+    if (hasMovie) {
+      alert("Filme já favoritado!");
+      return;
+    }
+
+    favoritedMovies.push(details);
+    localStorage.setItem("@primeflix", JSON.stringify(favoritedMovies));
+  }
 
   if (loading) {
     return (
-      <h2 className='loading'>
-        Carregando os detalhes do filme...
+      <h2 className="loading">
+        Carregando os detalhes do filme...⏳
       </h2>
     );
   }
 
   return (
-    <div className="detailCard">
-      <div>
-        <img src={`https://image.tmdb.org/t/p/original${details.poster_path}`}/>
-      </div>
-      <div>
-        <h2>{details.title}</h2>
-        <p>{details.overview}</p>
-        <strong>Avaliação: {details.vote_average}/10</strong>
-        <p>Gêneros: 
-          {}
-        </p>
+    <div className="movieCard">
+      <h1>{details.title}</h1>
+      <img src={`https://image.tmdb.org/t/p/original${details.backdrop_path}`} alt={details.title}/>
+      <h3>Sinopse</h3>
+      <span>{details.overview}</span>
+      <strong>Avaliação: {details.vote_average.toFixed(1)}/10</strong>
+      <div className="movieButtons">
+        <button onClick={favoriteMovie}>Favoritar</button>
+        <button>
+          <a target="blank" rel="external" href={`https://youtube.com/results?search_query=${details.title} trailer`}>
+            Trailer
+          </a>
+        </button>
       </div>
     </div>
   );

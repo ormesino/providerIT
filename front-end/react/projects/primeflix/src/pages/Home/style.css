@@ -1,15 +1,14 @@
+.loading {
+  height: calc(100vh - 5rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #361d32;
+}
+
 .list {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   margin: 3rem 0;
-}
-
-.loading {
-  height: calc(100vh - 200px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 50px 0 0 0;
-  color: #361d32;
 }
