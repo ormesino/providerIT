@@ -1,16 +1,18 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore'
+import { getFirestore } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCQSkvuXLIS__GbzBZNVhVvifWnwDQkijY",
-  authDomain: "primeflix-a8ae2.firebaseapp.com",
-  projectId: "primeflix-a8ae2",
-  storageBucket: "primeflix-a8ae2.appspot.com",
-  messagingSenderId: "249054427441",
-  appId: "1:249054427441:web:26b9922e35112402ec9810",
-  measurementId: "G-N6F32ZDXYJ"
+  apiKey: "AIzaSyC25CFfXDPk_5v4vKTM5dZKZuiV6Xp4pTw",
+  authDomain: "teste-c6d2b.firebaseapp.com",
+  projectId: "teste-c6d2b",
+  storageBucket: "teste-c6d2b.appspot.com",
+  messagingSenderId: "781891942509",
+  appId: "1:781891942509:web:d583b31a403d4f65306764",
+  measurementId: "G-GJ2EV80P48"
 };
 
 const firebaseApp = initializeApp(firebaseConfig);
 
 export const db = getFirestore(firebaseApp);
+export const auth = getAuth(firebaseApp);
