@@ -1,6 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 import './style.css';
+import 'primeicons/primeicons.css';
+import Logo from '../../assets/logo.png';
+import { InputText } from 'primereact/inputtext';
+import { Button } from 'primereact/button'
+import { Divider } from 'primereact/divider';
+import { Toast } from 'primereact/toast';
 
 import { auth, db } from '../../firebaseConnection';
 import { signOut } from 'firebase/auth';
@@ -11,6 +17,8 @@ export default function Admin() {
   const [edit, setEdit] = useState({});
   const [task, setTask] = useState('');
   const [taskList, setTaskList] = useState([]);
+
+  const toast = useRef(null);
 
   useEffect(() => {
     async function loadTasks() {
@@ -44,7 +52,7 @@ export default function Admin() {
 
     if (edit?.id) {
       if (edit.task === task) {
-        alert("Nenhuma alteração foi feita.");
+        toast.current.show({ severity: 'warn', summary: 'Atenção!', detail: 'Você não alterou a tarefa.' });
         setTask('');
         setEdit({});
       } else {
@@ -53,12 +61,12 @@ export default function Admin() {
           task: task,
         })
           .then(() => {
-            alert("Tarefa atualizada com sucesso.");
+            toast.current.show({ severity: 'success', summary: 'Sucesso!', detail: 'Tarefa atualizada!' });
             setTask('');
             setEdit({});
           })
           .catch(() => {
-            alert("Erro ao atualizar a tarefa.");
+            toast.current.show({ severity: 'error', summary: 'Erro!', detail: 'Erro ao atualizar tarefa.' });
             setTask('');
             setEdit({});
           })
@@ -74,14 +82,14 @@ export default function Admin() {
         userUid: user?.uid,
       })
         .then(() => {
-          alert("Tarefa adicionada com sucesso.")
+          toast.current.show({ severity: 'success', summary: 'Sucesso!', detail: 'Tarefa adicionada!' });
           setTask('');
         })
         .catch((error) => {
-          console.log(error);
+          toast.current.show({ severity: 'error', summary: 'Erro!', detail: 'Erro ao adicionar tarefa.' });
         });
     } else {
-      alert('Preencha o campo.');
+      toast.current.show({ severity: 'warn', summary: 'Atenção!', detail: 'Informe o nome da tarefa.' });
     }
   }
 
@@ -94,10 +102,10 @@ export default function Admin() {
     const docRef = doc(db, 'tasks', id);
     await deleteDoc(docRef)
       .then(() => {
-        alert("Tarefa excluída com sucesso.")
+        toast.current.show({ severity: 'success', summary: 'Sucesso!', detail: 'Tarefa excluída.' });
       })
       .catch(() => {
-        alert("Erro ao excluir tarefa.")
+        toast.current.show({ severity: 'error', summary: 'Erro!', detail: 'Erro ao excluir tarefa.' });
       });
   }
 
@@ -107,60 +115,77 @@ export default function Admin() {
 
   return (
     <div className='adminContainer'>
-      <h1>ToDo</h1>
+      <img src={Logo} alt="logo" />
       <div className='adminWelcome'>
         <h3>Seja bem-vindo(a)</h3>
-
         <div className='adminInfo'>
           <p>{user.email}</p>
-          <button
-            className='signoutBtn'
+          <Button
+            icon="pi pi-sign-out"
+            className='p-button-danger'
             onClick={handleLogout}
-          >Sair</button>
+          />  
         </div>
       </div>
       <form
         className='taskInput'
         onSubmit={handleAddTask}
       >
-        <input
-          type="text"
-          placeholder="Informe o nome da tarefa."
-          value={task}
-          onChange={(e) => setTask(e.target.value)}
-        />
+        <Toast ref={toast} />
         {
           edit?.id ? (
-            <div className="editBtnPlace">
-              <div
+            <div className="p-inputgroup flex-1">
+              <InputText
+                placeholder="Informe o nome da tarefa"
+                onChange={(e) => setTask(e.target.value)}
+                value={task}
+              />
+              <Button
+                icon="pi pi-times"
+                className="p-button-danger"
                 onClick={() => { setEdit({}); setTask(''); }}
-                className='btnCancel'
-              >X</div>
-              <button type='submit'>Atualizar</button>
+              />
+              <Button
+                icon="pi pi-check"
+              />
             </div>
           ) : (
-            <div>
-              <button type='submit'>Adicionar</button>
+            <div className="p-inputgroup flex-1">
+              <InputText
+                placeholder="Informe o nome da tarefa"
+                onChange={(e) => setTask(e.target.value)}
+                value={task}
+              />
+              <Button
+                icon="pi pi-plus"
+              />
             </div>
           )
         }
       </form>
 
+      <Divider />
+
       <div className='tasksList'>
+        <Toast ref={toast} />
         {
           taskList?.map((item) => {
             return (
               <div key={item.id} className='task'>
                 <span>{item.task}</span>
-                <div className='btnHolder'>
-                  <button
-                    className='btnEdit'
+                <div className='btnContainer'>
+                  <Button
                     onClick={() => { handleEditTask(item) }}
-                  >Editar</button>
-                  <button
-                    className='btnDelete'
+                    icon="pi pi-pencil"
+                    rounded
+                    text
+                  />
+                  <Button
+                    className='p-button-danger'
                     onClick={() => { handleDeleteTask(item.id) }}
-                  >Excluir</button>
+                    icon="pi pi-trash"
+                    rounded
+                  />
                 </div>
               </div>
             );

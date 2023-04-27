@@ -6,9 +6,8 @@
   height: 100vh;
 }
 
-.homeContainer h1 {
-  font-size: 2.5rem;
-  margin-bottom: 0.5rem;
+.homeContainer img {
+  margin-bottom: 1.5rem;
 }
 
 .homeForm {
@@ -17,20 +16,15 @@
   flex-direction: column;
   justify-content: center;
   width: 100%;
-  max-width: 300px;
+  max-width: 400px;
+  padding: 2rem;
+  border-radius: 4px;
+  background-color: #1e1e1e;
+  gap: 1rem;
 }
 
 .homeForm input {
-  margin-bottom: 0.5rem;
-  padding: 1rem;
-  border: none;
-  border-radius: 4px;
-  outline: none;
-  font-size: 16px;
-}
-
-.homeForm input:focus {
-  background-color: rgb(245, 245, 245);
+  width: 100%;
 }
 
 .homeForm button {
@@ -40,22 +34,22 @@
   outline: none;
   font-size: 16px;
   transition: all 0.3s ease-in-out;
-  margin: 0.5rem 0;
   font-weight: 600;
-  background-color: goldenrod;
+  background-color: #DBB822;
 }
 
 .homeForm button:hover {
   background-color: white;
+  color: #0F0D03;
 }
 
 .homeForm p {
   align-self: center;
-  color: rgb(175, 175, 175);
+  color: #afafaf;
 }
 
 .homeForm p a {
-  color: goldenrod;
+  color: #DBB822;
   text-decoration: none;
   font-weight: bold;
 }

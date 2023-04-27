@@ -3,11 +3,13 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 40%;
-  max-width: 800px;
-  margin: 10rem auto;
-  padding: 2rem;
-  border-radius: 8px;
+  width: 80%;
+  max-width: 700px;
+  margin: 6rem auto;
+}
+
+.adminContainer img {
+  margin-bottom: 5rem;
 }
 
 .adminWelcome {
@@ -15,79 +17,17 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  margin-top: 2rem;
 }
 
 .adminInfo {
   display: flex;
   align-items: center;
-  justify-content: right;
-  width: 50%;
   gap: 1rem;
-}
-
-.signoutBtn {
-  padding: 0.2rem 1rem;
-  background-color: #0c0b00;
-  border-radius: 32px;
-  border: 2px solid red;
-  color: red;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.1s ease-in-out;
-}
-
-.signoutBtn:hover {
-  background-color: red;
-  color: white;
 }
 
 .taskInput {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   width: 100%;
   margin: 2rem 0 1rem;
-  gap: 1rem;
-}
-
-.taskInput input {
-  width: 100%;
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  border: none;
-  outline: none;
-}
-
-.taskInput button {
-  padding: 0.5rem 1rem;
-  background-color: goldenrod;
-  border-radius: 8px;
-  border: none;
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.1s ease-in-out;
-}
-
-.btnCancel {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: red;
-  width: 36px;
-  height: 36px; 
-  border-radius: 50%;
-  transition: all 0.2s ease-in-out;
-}
-
-.btnCancel:hover {
-  background-color: #474747;
-}
-
-.editBtnPlace {
-  display: flex;
-  gap: 0.2rem;
 }
 
 .tasksList { 
@@ -95,9 +35,10 @@
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  background-color: rgb(71, 55, 10);
-  border-radius: 8px;
+  background-color: #1e1e1e;
+  border-radius: 4px;
   width: 100%;
+  margin-top: 1rem;
 }
 
 .task {
@@ -106,39 +47,11 @@
   justify-content: space-between;
   width: 100%;
   padding: 1rem;
-  border-radius: 8px;
-  color: white;
+  border-radius: 4px;
 }
 
-.btnHolder {
+.btnContainer {
   display: flex;
   justify-content: space-between;
-  gap: 1rem;
+  gap: 0.5rem;
 }
-
-.btnEdit {
-  padding: 0.5rem 1rem;
-  background-color: rgb(71, 55, 10);
-  border-radius: 8px;
-  border: none;
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.1s ease-in-out;
-}
-
-.btnEdit:hover {
-  background-color: goldenrod;
-}
-
-.btnDelete {
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  border: none;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.1s ease-in-out;
-  background-color: red;
-  color: white;
-}
-

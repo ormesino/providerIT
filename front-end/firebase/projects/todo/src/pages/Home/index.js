@@ -1,5 +1,11 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+
 import './style.css';
+import Logo from '../../assets/logo.png';
+import { InputText } from 'primereact/inputtext';
+import { Password } from 'primereact/password';
+import { Divider } from 'primereact/divider';
+import { Toast } from 'primereact/toast';
 
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -10,6 +16,7 @@ export default function Home() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const toast = useRef(null);
   const navigate = useNavigate();
 
   async function handleLogin(e) {
@@ -17,48 +24,49 @@ export default function Home() {
     if (email !== '' && password !== '') {
       await signInWithEmailAndPassword(auth, email, password)
         .then(() => {
-          alert('Logado com sucesso!');
-          navigate('/admin', { replace: true });
+          toast.current.show({ severity: 'success', summary: 'Sucesso!', detail: 'Você foi logado com sucesso!'});
+          setTimeout(() => {
+            navigate('/admin', { replace: true });
+          }, 1500);   
         })
         .catch((error) => {
           if (error.code === 'auth/wrong-password') {
-            alert('Senha incorreta!');
+            toast.current.show({ severity: 'error', summary: 'Erro!', detail: 'Senha incorreta.' });
           } else if (error.code === 'auth/user-not-found') {
-            alert('Usuário não encontrado!');
+            toast.current.show({ severity: 'error', summary: 'Erro!', detail: 'Usuário não encontrado.' });
           } else {
-            alert('Erro ao logar!');
+            toast.current.show({ severity: 'error', summary: 'Erro!', detail: 'Houve um erro ao tentar logar.' });
           }
           setPassword('');
         });
     } else {
-      alert('Preencha os campos corretamente!');
+      toast.current.show({ severity: 'warn', summary: 'Atenção!', detail: 'Preencha todos os campos!' });
     }
   }
 
   return (
     <div className='homeContainer'>
-      <h1>ToDo</h1>
+      <img src={Logo} alt="logo" />
       <span>Gerencie suas tarefas de forma fácil e rápida.</span>
 
       <form
         className='homeForm'
         onSubmit={handleLogin}
       >
-        <input
-          type='text'
-          placeholder='Digite seu e-mail.'
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-
-        />
-        <input
-          type='password'
-          placeholder='Digite sua senha.'
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+        <span className="p-float-label">
+          <InputText id="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+          <label htmlFor="email">E-mail</label>
+        </span>
+        <span className="p-float-label">
+          <Password size={30} value={password} onChange={(e) => setPassword(e.target.value)} toggleMask feedback={false} />
+          <label htmlFor="password">Senha</label>
+        </span>
+        <Toast ref={toast} />
         <button type='submit'>Entrar</button>
-        <p>Não possui uma conta? <Link to="/register">Registre-se!</Link></p>
+
+        <Divider />
+
+        <p> Não possui uma conta? <Link to="/register">Registre-se!</Link> </p>
       </form>
     </div>
   );
