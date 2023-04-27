@@ -7,19 +7,17 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 
 export default function Register() {
   const [email, setEmail] = useState('');
-  const [name, setName] = useState('');
   const [password, setPassword] = useState('');
 
   const navigate = useNavigate();
 
   function handleRegister(e) {
     e.preventDefault();
-    if (email !== '' && password !== '' && name !== '') {
-      createUserWithEmailAndPassword(auth, email, password, name)
-        .then((result) => {
+    if (email !== '' && password !== '') {
+      createUserWithEmailAndPassword(auth, email, password)
+        .then(() => {
           alert('Registrado com sucesso!');
           navigate('/', { replace: true });
-          console.log(result);
         })
         .catch((error) => {
           if (error.code === 'auth/weak-password') {
@@ -50,12 +48,6 @@ export default function Register() {
           placeholder='Digite um e-mail.'
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          type='text'
-          placeholder='Digite o seu nome.'
-          value={name}
-          onChange={(e) => setName(e.target.value)}
         />
         <input
           type='password'

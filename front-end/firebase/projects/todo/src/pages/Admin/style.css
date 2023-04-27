@@ -70,6 +70,26 @@
   transition: all 0.1s ease-in-out;
 }
 
+.btnCancel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: red;
+  width: 36px;
+  height: 36px; 
+  border-radius: 50%;
+  transition: all 0.2s ease-in-out;
+}
+
+.btnCancel:hover {
+  background-color: #474747;
+}
+
+.editBtnPlace {
+  display: flex;
+  gap: 0.2rem;
+}
+
 .tasksList { 
   display: flex;
   flex-direction: column;

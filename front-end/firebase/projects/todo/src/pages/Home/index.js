@@ -16,7 +16,7 @@ export default function Home() {
     e.preventDefault();
     if (email !== '' && password !== '') {
       await signInWithEmailAndPassword(auth, email, password)
-        .then((result) => {
+        .then(() => {
           alert('Logado com sucesso!');
           navigate('/admin', { replace: true });
         })

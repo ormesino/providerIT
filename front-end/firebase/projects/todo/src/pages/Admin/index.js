@@ -4,12 +4,13 @@ import './style.css';
 
 import { auth, db } from '../../firebaseConnection';
 import { signOut } from 'firebase/auth';
-import { addDoc, collection, onSnapshot, query, orderBy, where } from 'firebase/firestore';
+import { addDoc, collection, onSnapshot, query, orderBy, where, doc, deleteDoc, updateDoc } from 'firebase/firestore';
 
 export default function Admin() {
   const [user, setUser] = useState({});
+  const [edit, setEdit] = useState({});
   const [task, setTask] = useState('');
-  const [taskList, setTaskList] = useState([]); // eslint-disable-line
+  const [taskList, setTaskList] = useState([]);
 
   useEffect(() => {
     async function loadTasks() {
@@ -21,7 +22,7 @@ export default function Admin() {
         const taskRef = collection(db, 'tasks');
         const q = query(taskRef, orderBy('created', 'desc'), where("userUid", "==", data.uid));
 
-        const unsub = onSnapshot(q, (snapshot) => {
+        onSnapshot(q, (snapshot) => {
           let tasks = [];
           snapshot.forEach((doc) => {
             tasks.push({
@@ -36,10 +37,34 @@ export default function Admin() {
     }
 
     loadTasks();
-  }, []); // eslint-disable-line
+  }, []);
 
   async function handleAddTask(e) {
     e.preventDefault();
+
+    if (edit?.id) {
+      if (edit.task === task) {
+        alert("Nenhuma alteração foi feita.");
+        setTask('');
+        setEdit({});
+      } else {
+        const docRef = doc(db, 'tasks', edit?.id);
+        await updateDoc(docRef, {
+          task: task,
+        })
+          .then(() => {
+            alert("Tarefa atualizada com sucesso.");
+            setTask('');
+            setEdit({});
+          })
+          .catch(() => {
+            alert("Erro ao atualizar a tarefa.");
+            setTask('');
+            setEdit({});
+          })
+      }
+      return;
+    }
 
     if (task !== '') {
       await addDoc(collection(db, 'tasks'), {
@@ -60,6 +85,22 @@ export default function Admin() {
     }
   }
 
+  async function handleEditTask(item) {
+    setEdit(item);
+    setTask(item.task);
+  }
+
+  async function handleDeleteTask(id) {
+    const docRef = doc(db, 'tasks', id);
+    await deleteDoc(docRef)
+      .then(() => {
+        alert("Tarefa excluída com sucesso.")
+      })
+      .catch(() => {
+        alert("Erro ao excluir tarefa.")
+      });
+  }
+
   async function handleLogout() {
     await signOut(auth);
   }
@@ -71,7 +112,7 @@ export default function Admin() {
         <h3>Seja bem-vindo(a)</h3>
 
         <div className='adminInfo'>
-          <p>Nome</p>
+          <p>{user.email}</p>
           <button
             className='signoutBtn'
             onClick={handleLogout}
@@ -88,7 +129,21 @@ export default function Admin() {
           value={task}
           onChange={(e) => setTask(e.target.value)}
         />
-        <button>Adicionar</button>
+        {
+          edit?.id ? (
+            <div className="editBtnPlace">
+              <div
+                onClick={() => { setEdit({}); setTask(''); }}
+                className='btnCancel'
+              >X</div>
+              <button type='submit'>Atualizar</button>
+            </div>
+          ) : (
+            <div>
+              <button type='submit'>Adicionar</button>
+            </div>
+          )
+        }
       </form>
 
       <div className='tasksList'>
@@ -98,9 +153,13 @@ export default function Admin() {
               <div key={item.id} className='task'>
                 <span>{item.task}</span>
                 <div className='btnHolder'>
-                  <button className='btnEdit'>Editar</button>
+                  <button
+                    className='btnEdit'
+                    onClick={() => { handleEditTask(item) }}
+                  >Editar</button>
                   <button
                     className='btnDelete'
+                    onClick={() => { handleDeleteTask(item.id) }}
                   >Excluir</button>
                 </div>
               </div>
