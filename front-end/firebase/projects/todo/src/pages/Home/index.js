@@ -19,7 +19,6 @@ export default function Home() {
         .then((result) => {
           alert('Logado com sucesso!');
           navigate('/admin', { replace: true });
-          console.log(result);
         })
         .catch((error) => {
           if (error.code === 'auth/wrong-password') {

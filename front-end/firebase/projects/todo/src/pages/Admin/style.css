@@ -1,0 +1,124 @@
+.adminContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 40%;
+  max-width: 800px;
+  margin: 10rem auto;
+  padding: 2rem;
+  border-radius: 8px;
+}
+
+.adminWelcome {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 2rem;
+}
+
+.adminInfo {
+  display: flex;
+  align-items: center;
+  justify-content: right;
+  width: 50%;
+  gap: 1rem;
+}
+
+.signoutBtn {
+  padding: 0.2rem 1rem;
+  background-color: #0c0b00;
+  border-radius: 32px;
+  border: 2px solid red;
+  color: red;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.1s ease-in-out;
+}
+
+.signoutBtn:hover {
+  background-color: red;
+  color: white;
+}
+
+.taskInput {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin: 2rem 0 1rem;
+  gap: 1rem;
+}
+
+.taskInput input {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+}
+
+.taskInput button {
+  padding: 0.5rem 1rem;
+  background-color: goldenrod;
+  border-radius: 8px;
+  border: none;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.1s ease-in-out;
+}
+
+.tasksList { 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  background-color: rgb(71, 55, 10);
+  border-radius: 8px;
+  width: 100%;
+}
+
+.task {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 1rem;
+  border-radius: 8px;
+  color: white;
+}
+
+.btnHolder {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.btnEdit {
+  padding: 0.5rem 1rem;
+  background-color: rgb(71, 55, 10);
+  border-radius: 8px;
+  border: none;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.1s ease-in-out;
+}
+
+.btnEdit:hover {
+  background-color: goldenrod;
+}
+
+.btnDelete {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.1s ease-in-out;
+  background-color: red;
+  color: white;
+}
+

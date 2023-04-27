@@ -7,14 +7,15 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 
 export default function Register() {
   const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
   const [password, setPassword] = useState('');
 
   const navigate = useNavigate();
 
   function handleRegister(e) {
     e.preventDefault();
-    if (email !== '' && password !== '') {
-      createUserWithEmailAndPassword(auth, email, password)
+    if (email !== '' && password !== '' && name !== '') {
+      createUserWithEmailAndPassword(auth, email, password, name)
         .then((result) => {
           alert('Registrado com sucesso!');
           navigate('/', { replace: true });
@@ -49,7 +50,12 @@ export default function Register() {
           placeholder='Digite um e-mail.'
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-
+        />
+        <input
+          type='text'
+          placeholder='Digite o seu nome.'
+          value={name}
+          onChange={(e) => setName(e.target.value)}
         />
         <input
           type='password'

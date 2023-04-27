@@ -7,7 +7,7 @@
 }
 
 body {
-  font-family: Poppins, sans;
+  font-family: Poppins;
   width: 100%;
   color: #FFF;
   background-color: #0c0b00;
@@ -15,4 +15,5 @@ body {
 
 button {
   cursor: pointer;
+  font-family: Poppins;
 }
