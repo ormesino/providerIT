@@ -1,0 +1,59 @@
+.homeContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.homeContainer img {
+  margin-bottom: 1.5rem;
+}
+
+.homeForm {
+  margin: 2rem 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  max-width: 400px;
+  padding: 2rem;
+  border-radius: 4px;
+  background-color: #1e1e1e;
+  gap: 1rem;
+}
+
+.homeForm input {
+  width: 100%;
+}
+
+.homeForm button {
+  padding: 0.5rem;
+  border: none;
+  border-radius: 4px;
+  outline: none;
+  font-size: 16px;
+  transition: all 0.3s ease-in-out;
+  font-weight: 600;
+  background-color: #DBB822;
+}
+
+.homeForm button:hover {
+  background-color: white;
+  color: #0F0D03;
+}
+
+.homeForm p {
+  align-self: center;
+  color: #afafaf;
+}
+
+.homeForm p a {
+  color: #DBB822;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.homeForm p a:hover {
+  text-decoration: underline;
+}

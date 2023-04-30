@@ -1,0 +1,57 @@
+.adminContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 80%;
+  max-width: 700px;
+  margin: 6rem auto;
+}
+
+.adminContainer img {
+  margin-bottom: 5rem;
+}
+
+.adminWelcome {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.adminInfo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.taskInput {
+  width: 100%;
+  margin: 2rem 0 1rem;
+}
+
+.tasksList { 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #1e1e1e;
+  border-radius: 4px;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.task {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 1rem;
+  border-radius: 4px;
+}
+
+.btnContainer {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
