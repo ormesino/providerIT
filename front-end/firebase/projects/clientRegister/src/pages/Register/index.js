@@ -7,39 +7,54 @@ import { InputText } from 'primereact/inputtext';
 import { Password } from 'primereact/password';
 import { Divider } from 'primereact/divider';
 import { Toast } from 'primereact/toast';
-        
 
-import { auth } from '../../firebaseConnection';
+import { auth, db } from '../../firebaseConnection';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
 
 export default function Register() {
   const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
   const [password, setPassword] = useState('');
+  const [confirm, setConfirm] = useState('');
 
   const navigate = useNavigate();
   const toast = useRef(null);
 
   function handleRegister(e) {
     e.preventDefault();
-    if (email !== '' && password !== '') {
+    if (email !== '' && password !== '' && name !== '' && confirm !== '') {
+      if (password !== confirm) {
+        toast.current.show({ severity: 'warn', summary: 'Atenção!', detail: 'As senhas não coincidem!' });
+        return;
+      }
       createUserWithEmailAndPassword(auth, email, password)
-        .then(() => {
+        .then((response) => {
           toast.current.show({ severity: 'success', summary: 'Sucesso!', detail: 'Conta registrada!' });
+          const uid = response.user.uid;
+          setDoc(doc(db, 'user', uid), {
+            name: name,
+          });
           setEmail('');
           setPassword('');
+          setName('');
+          setConfirm('');
           setTimeout(() => {
             navigate('/', { replace: true });
-          }, 1500);  
+          }, 1500);
         })
         .catch((error) => {
           if (error.code === 'auth/weak-password') {
-            toast.current.show({ severity: 'error', summary: 'Erro!', detail: 'Senha fraca, tente novamente.' });
+            toast.current.show({ severity: 'warn', summary: 'Atenção!', detail: 'Senha fraca, tente novamente.' });
           } else if (error.code === 'auth/email-already-in-use') {
-            toast.current.show({ severity: 'error', summary: 'Erro!', detail: 'E-mail já cadastrado.' });
+            toast.current.show({ severity: 'warn', summary: 'Atenção!', detail: 'E-mail já cadastrado.' });
+          } else if (error.code === 'auth/invalid-email') {
+            toast.current.show({ severity: 'warn', summary: 'Atenção!', detail: 'E-mail inválido.' });
           } else {
             toast.current.show({ severity: 'error', summary: 'Erro!', detail: 'Houve um erro ao se registrar.' });
           }
           setPassword('');
+          setConfirm('');
         });
     } else {
       toast.current.show({ severity: 'warn', summary: 'Atenção!', detail: 'Preencha todos os campos!' });
@@ -60,53 +75,24 @@ export default function Register() {
           <label htmlFor="email">E-mail</label>
         </span>
         <span className="p-float-label">
+          <InputText id="name" value={name} onChange={(e) => setName(e.target.value)} />
+          <label htmlFor="name">Nome</label>
+        </span>
+        <span className="p-float-label">
           <Password size={30} value={password} onChange={(e) => setPassword(e.target.value)} toggleMask />
           <label htmlFor="password">Senha</label>
         </span>
-
+        <span className="p-float-label">
+          <Password size={30} value={confirm} onChange={(e) => setConfirm(e.target.value)} toggleMask feedback={false} />
+          <label htmlFor="password">Confirme a sua senha</label>
+        </span>
         <Toast ref={toast} />
         <button type='submit'>Registrar</button>
-        
+
         <Divider />
-        
+
         <p>Já possui uma conta? <Link to="/">Faça o login.</Link></p>
       </form>
     </div>
   );
 }
-
-/* import React, { useRef } from 'react';
-import { Button } from 'primereact/button';
-import { Toast } from 'primereact/toast';
-
-export default function SeverityDemo() {
-    const toast = useRef(null);
-
-    const showSuccess = () => {
-        toast.current.show({severity:'success', summary: 'Success', detail:'Message Content', life: 3000});
-    }
-
-    const showInfo = () => {
-        toast.current.show({severity:'info', summary: 'Info', detail:'Message Content', life: 3000});
-    }
-
-    const showWarn = () => {
-        toast.current.show({severity:'warn', summary: 'Warning', detail:'Message Content', life: 3000});
-    }
-
-    const showError = () => {
-        toast.current.show({severity:'error', summary: 'Error', detail:'Message Content', life: 3000});
-    }
-
-    return (
-        <div className="card flex justify-content-center">
-            <Toast ref={toast} />
-            <div className="flex flex-wrap gap-2">
-                <Button label="Success" className="p-button-success" onClick={showSuccess} />
-                <Button label="Info" className="p-button-info" onClick={showInfo} />
-                <Button label="Warn" className="p-button-warning" onClick={showWarn} />
-                <Button label="Error" className="p-button-danger" onClick={showError} />
-            </div>
-        </div>
-    )
-} */

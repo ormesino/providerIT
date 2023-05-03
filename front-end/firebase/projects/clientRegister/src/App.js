@@ -5,14 +5,10 @@ import "./primereact-theme.css";
 import "primereact/resources/primereact.min.css";    
 
 import { addLocale, locale } from 'primereact/api';
+import localePTBR from './primereact/locale.json';
         
 export default function App() {
-  addLocale('pt-br', {
-    "weak": "Fraca",
-    "medium": "Média",
-    "strong": "Forte",
-    "passwordPrompt": "Digite uma senha",
-  });
+  addLocale('pt-br', localePTBR);
   locale('pt-br');
 
   return (
