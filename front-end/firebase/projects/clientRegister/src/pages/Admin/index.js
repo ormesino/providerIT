@@ -13,7 +13,8 @@ import { Button } from 'primereact/button'
 import { Divider } from 'primereact/divider';
 import { Toast } from 'primereact/toast';
 import { Dialog } from 'primereact/dialog';
-
+import { RadioButton } from "primereact/radiobutton";
+import { Dropdown } from 'primereact/dropdown';
 
 import { auth, db } from '../../firebaseConnection';
 import { signOut } from 'firebase/auth';
@@ -21,7 +22,6 @@ import { addDoc, collection, onSnapshot, query, orderBy, where, doc, deleteDoc, 
 
 export default function Admin() {
   const [user, setUser] = useState({});
-
   const [visible, setVisible] = useState(false);
   const [edit, setEdit] = useState({});
   const [selectedClient, setSelectedClient] = useState(null);
@@ -29,6 +29,12 @@ export default function Admin() {
   const [clientList, setClientList] = useState([]);
 
   const toast = useRef(null);
+
+  const pronouns = [
+    { name: 'Ele/Dele' },
+    { name: 'Ela/Dela' },
+    { name: 'Elu/Delu' },
+  ];
 
   const fakeClients = [
     {
@@ -55,7 +61,7 @@ export default function Admin() {
   ]
 
   useEffect(() => {
-    async function loadClients() {
+    async function loadUserName() {
       const userDetail = localStorage.getItem('@detailUser');
       const data = JSON.parse(userDetail);
       const docRef = doc(db, 'user', data.uid);
@@ -69,6 +75,9 @@ export default function Admin() {
         .catch((error) => {
           console.log(error);
         });
+    }
+
+    async function loadClients() {
       /* const clientRef = collection(db, 'clients');
       const q = query(clientRef, orderBy('created', 'desc'), where("userUid", "==", data.uid));
 
@@ -83,8 +92,15 @@ export default function Admin() {
       }); */
     }
 
+    loadUserName();
     loadClients();
   }, []);
+
+  useEffect(() => {
+    if(!visible) {
+      setClient({});
+    }
+  }, [visible]);
 
   async function handleAddClient(e) {
     e.preventDefault();
@@ -121,7 +137,7 @@ export default function Admin() {
         toast.current.show({ severity: 'success', summary: 'Sucesso!', detail: 'Cliente adicionado!' });
 
       })
-      .catch((error) => {
+      .catch(() => {
         toast.current.show({ severity: 'error', summary: 'Erro!', detail: 'Erro ao adicionar o cliente.' });
       });
   }
@@ -162,61 +178,147 @@ export default function Admin() {
       </div>
 
       <div className="inputArea">
-        <InputText
-          placeholder='Nome'
-          value={client.name}
-          onChange={(e) => setClient({ ...client, name: e.target.value })}
-        />
-        <Calendar
-          placeholder='Data de Nascimento'
-          dateFormat="dd/mm/yy"
-          value={client.birthDate}
-          onChange={(e) => setClient({ ...client, birthDate: e.target.value })}
-          readOnlyInput
-        />
-        <div className="card flex justify-content-center">
-          <Button
-            label="Adicionar"
-            icon="pi pi-plus"
-            onClick={() => setVisible(true)}
+        <span className="p-float-label">
+          <InputText
+            value={client.name || ''}
+            onChange={(e) => setClient({ ...client, name: e.target.value })}
           />
-          <Dialog header="Cadastro do Cliente" visible={visible} onHide={() => setVisible(false)}
-            style={{ width: '50vw' }} breakpoints={{ '960px': '75vw', '641px': '100vw' }}>
-            <form>
-              <div>
-                <InputText
-                  placeholder='Nome'
-                  value={client.name}
-                  onChange={(e) => setClient({ ...client, name: e.target.value })}
-                />
-                <Calendar
-                  placeholder='Data de Nascimento'
-                  dateFormat="dd/mm/yy"
-                  value={client.birthDate}
-                  onChange={(e) => setClient({ ...client, birthDate: e.value })}
-                  readOnlyInput
-                />
-              </div>
-              <InputMask
-                placeholder='CPF'
-                id="cpf"
-                mask="999.999.999-99"
-                value={client.cpf}
-                onChange={(e) => setClient({ ...client, cpf: e.target.value })}
-              />
-
-            </form>
-          </Dialog>
-        </div>
-
+          <label htmlFor="nome">Nome</label>
+        </span>
+        <span className="p-float-label">
+          <Calendar
+            dateFormat="dd/mm/yy"
+            value={client.birthDate}
+            onChange={(e) => setClient({ ...client, birthDate: e.target.value })}
+            readOnlyInput
+          />
+          <label htmlFor="nome">Data de Nascimento</label>
+        </span>
+        <Button
+          label="Adicionar"
+          icon="pi pi-plus"
+          onClick={() => setVisible(true)}
+        />
       </div>
+
+      <Dialog header="Cadastro do Cliente" visible={visible} onHide={() => setVisible(false)}
+        style={{ width: '50vw' }} breakpoints={{ '960px': '75vw', '641px': '100vw' }}>
+        <form className='dialogBox'>
+          <div>
+            <span className="p-float-label">
+              <InputText
+                value={client.name || ''}
+                onChange={(e) => setClient({ ...client, name: e.target.value })}
+                // onchange="checkName()"
+                size="30"
+                required
+              />
+              <label htmlFor="nome">Nome</label>
+            </span>
+            <span className="p-float-label">
+              <Calendar
+                dateFormat="dd/mm/yy"
+                value={client.birthDate}
+                onChange={(e) => setClient({ ...client, birthDate: e.value })}
+                readOnlyInput
+              />
+              <label htmlFor="nome">Data de Nascimento</label>
+            </span>
+          </div>
+
+
+          <div className='radioContainer'>
+            <div className='radioOption'>
+              <RadioButton inputId="gender1" name="gender" value="Feminino" onChange={(e) => setClient({ ...client, gender: e.value })} checked={client.gender === 'Feminino'} />
+              <label htmlFor="gender1" className="ml-2">Feminino</label>
+            </div>
+            <div className='radioOption'>
+              <RadioButton inputId="gender2" name="gender" value="Masculino" onChange={(e) => setClient({ ...client, gender: e.value })} checked={client.gender === 'Masculino'} />
+              <label htmlFor="gender2" className="ml-2">Masculino</label>
+            </div>
+            <div className='radioOption'>
+              <RadioButton inputId="gender3" name="gender" value="Personalizado" onChange={(e) => setClient({ ...client, gender: e.value })} checked={client.gender === 'Personalizado'} />
+              <label htmlFor="gender3" className="ml-2">Personalizado</label>
+            </div>
+          </div>
+
+          {client.gender === 'Personalizado' && (
+            <div>
+              <div className="card flex justify-content-center">
+                <span className="p-float-label">
+                  <Dropdown inputId="pronome" value={client.pronouns} onChange={(e) => setClient({ ...client, pronouns: e.value })} options={pronouns} optionLabel="name" className="selectPronoun" />
+                  <label htmlFor="pronome">Seu pronome</label>
+                </span>
+              </div>
+              <span className="p-float-label">
+                <InputText size="15" id="genero" />
+                <label htmlFor="genero">Gênero (opcional)</label>
+              </span>
+            </div>
+          )
+          }
+
+          <div>
+            <span className="p-float-label">
+              <InputMask mask="999.999.999-99" value={client.cpf} /* onChange={formatCPF} */ onChange={(e) => setClient({ ...client, cpf: e.target.value })} size="14" id="cpf" required />
+              <label htmlFor="cpf">CPF</label>
+            </span>
+            <span className="p-float-label">
+              <InputMask mask="99999-999" /* onChange={getCEP} */ size="10" id="cep" required />
+              <label htmlFor="cep">CEP</label>
+            </span>
+          </div>
+
+          <div>
+            <span className="p-float-label">
+              <InputText id="rua" disabled />
+              <label htmlFor="rua">Rua</label>
+            </span>
+            <span className="p-float-label">
+              <InputText size={5} id="num" required />
+              <label htmlFor="num">Núm.</label>
+            </span>
+            <span className="p-float-label">
+              <InputText size={10} id="complemento" />
+              <label htmlFor="complemento">Complemento</label>
+            </span>
+          </div>
+
+          <div>
+            <span className="p-float-label">
+              <InputText id="bairro" disabled />
+              <label htmlFor="bairro">Bairro</label>
+            </span>
+            <span className="p-float-label">
+              <InputText id="cidade" disabled />
+              <label htmlFor="cidade">Cidade</label>
+            </span>
+            <span className="p-float-label">
+              <InputText size={1} id="estado" disabled />
+              <label htmlFor="estado">UF</label>
+            </span>
+          </div>
+
+          <div align="center">
+            <Button label="Adicionar" icon="pi pi-plus" onClick={() => setVisible(true)} />
+            <Button type='button' label="Limpar Campos" icon="pi pi-times" onClick={() => clearForm()} />
+          </div>
+        </form>
+      </Dialog>
 
       <Divider />
 
       <div className='clientList'>
         <Toast ref={toast} />
         <div className="card">
-          <DataTable value={fakeClients} selectionMode="single" selection={selectedClient} onSelectionChange={(e) => { setSelectedClient(e.value) }} dataKey="id" tableStyle={{ minWidth: '50rem' }}>
+          <DataTable value={fakeClients}
+            selectionMode="single"
+            selection={selectedClient}
+            onSelectionChange={(e) => { setSelectedClient(e.value) }}
+            dataKey="id"
+            tableStyle={{ minWidth: '50rem' }}
+            stripedRows
+          >
             <Column field="name" header="Nome" />
             <Column field="cpf" header="CPF" />
             <Column field="birthDate" header="Data de Nascimento" />

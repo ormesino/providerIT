@@ -1,7 +1,7 @@
 import RoutesApp from "./routes";
 import { BrowserRouter } from "react-router-dom";
 
-import "./primereact-theme.css";
+import "./primereact/theme.css";
 import "primereact/resources/primereact.min.css";    
 
 import { addLocale, locale } from 'primereact/api';
