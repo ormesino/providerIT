@@ -13,12 +13,11 @@ import { Button } from 'primereact/button'
 import { Divider } from 'primereact/divider';
 import { Toast } from 'primereact/toast';
 import { Dialog } from 'primereact/dialog';
-import { RadioButton } from "primereact/radiobutton";
 import { Dropdown } from 'primereact/dropdown';
 
 import { auth, db } from '../../firebaseConnection';
 import { signOut } from 'firebase/auth';
-import { addDoc, collection, onSnapshot, query, orderBy, where, doc, deleteDoc, updateDoc, getDoc } from 'firebase/firestore';
+import { addDoc, collection, doc, deleteDoc, updateDoc, getDoc } from 'firebase/firestore';
 
 export default function Admin() {
   const [user, setUser] = useState({});
@@ -26,14 +25,25 @@ export default function Admin() {
   const [edit, setEdit] = useState({});
   const [selectedClient, setSelectedClient] = useState(null);
   const [client, setClient] = useState({});
-  const [clientList, setClientList] = useState([]);
+  /* const [clientList, setClientList] = useState([]); */
 
   const toast = useRef(null);
 
+  let minDate = new Date();
+  minDate.setFullYear(minDate.getFullYear() - 120);
+  let maxDate = new Date();
+  maxDate.setDate(maxDate.getDate() - 1);
+
+  const gender = [
+    'Feminino',
+    'Masculino',
+    'Personalizado'
+  ]
+
   const pronouns = [
-    { name: 'Ele/Dele' },
-    { name: 'Ela/Dela' },
-    { name: 'Elu/Delu' },
+    'Ele/Dele',
+    'Ela/Dela',
+    'Elu/Delu',
   ];
 
   const fakeClients = [
@@ -97,10 +107,86 @@ export default function Admin() {
   }, []);
 
   useEffect(() => {
-    if(!visible) {
+    if (!visible) {
       setClient({});
     }
   }, [visible]);
+
+  function checkName() {
+    let name = client.name ? client.name : '';
+    if (name.length > 0) {
+      let fullName = name.split(' ');
+      if (fullName.length < 2 || fullName[0].length < 3 || fullName[1].length < 3) {
+        toast.current.show({ severity: 'warn', summary: 'Atenção!', detail: 'Digite um nome válido.' });
+        return setClient({ ...client, name: '' });
+      }
+    }
+  }
+
+  function validateCPF(e) {
+    let cpf = e.target.value;
+    if (cpf !== '') {
+      cpf = cpf.replace(/\D/g, "");
+      let soma = 0;
+      let resto;
+
+      if (cpf.length === 11 && cpf != "00000000000") {
+        for (let i = 0; i < 9; i++) {
+          soma += parseInt(cpf[i]) * (10 - i);
+        }
+        resto = (soma * 10) % 11;
+        if (resto === 10) resto = 0;
+        if (resto != parseInt(cpf[9])) {
+          toast.current.show({ severity: 'warn', summary: 'Atenção!', detail: 'Digite um CPF válido.' });
+          return setClient({ ...client, cpf: '' });
+        }
+
+        soma = 0;
+        for (let i = 0; i < 10; i++) {
+          soma += parseInt(cpf[i]) * (11 - i);
+        }
+        resto = (soma * 10) % 11;
+        if (resto === 10) resto = 0;
+        if (resto != parseInt(cpf[10])) {
+          toast.current.show({ severity: 'warn', summary: 'Atenção!', detail: 'Digite um CPF válido.' });
+          return setClient({ ...client, cpf: '' });
+        }
+
+        return setClient({ ...client, cpf });
+      } else {
+        toast.current.show({ severity: 'warn', summary: 'Atenção!', detail: 'Digite um CPF válido.' });
+        return setClient({ ...client, cpf: '' });
+      }
+    }
+  }
+
+  function getCEP(e) {
+    if (e.target.value.length === 9 && e.target.value !== '') {
+      let cep = e.target.value.replace(/-/g, "");
+      let url = `https://viacep.com.br/ws/${cep}/json/`;
+
+      fetch(url)
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          if (data.logradouro === undefined || cep.length !== 8) {
+            throw new Error;
+          }
+          return setClient({ ...client, cep, street: data.logradouro, neighborhood: data.bairro, city: data.localidade, state: data.uf })
+        })
+        .catch(() => {
+          toast.current.show({ severity: 'warn', summary: 'Atenção!', detail: 'CEP não encontrado.' })
+          return setClient({ ...client, cep: '', street: '', neighborhood: '', city: '', state: '' });
+        });
+    } else {
+      return setClient({ ...client, cep: '', street: '', neighborhood: '', city: '', state: '' });
+    }
+  }
+
+  function clearForm() {
+    setClient({});
+  }
 
   async function handleAddClient(e) {
     e.preventDefault();
@@ -131,11 +217,14 @@ export default function Admin() {
 
 
     await addDoc(collection(db, 'clients'), {
-      // ?
+      ...client,
+      createdAt: new Date(),
+      creator: user.uid,
     })
       .then(() => {
         toast.current.show({ severity: 'success', summary: 'Sucesso!', detail: 'Cliente adicionado!' });
-
+        setVisible(false);
+        setVisible(true);
       })
       .catch(() => {
         toast.current.show({ severity: 'error', summary: 'Erro!', detail: 'Erro ao adicionar o cliente.' });
@@ -144,7 +233,6 @@ export default function Admin() {
 
   async function handleEditClient(item) {
     setEdit(item);
-
   }
 
   async function handleDeleteClient(id) {
@@ -183,16 +271,18 @@ export default function Admin() {
             value={client.name || ''}
             onChange={(e) => setClient({ ...client, name: e.target.value })}
           />
-          <label htmlFor="nome">Nome</label>
+          <label>Nome</label>
         </span>
         <span className="p-float-label">
           <Calendar
             dateFormat="dd/mm/yy"
             value={client.birthDate}
-            onChange={(e) => setClient({ ...client, birthDate: e.target.value })}
+            onChange={(e) => setClient({ ...client, birthDate: e.value })}
             readOnlyInput
+            minDate={minDate}
+            maxDate={maxDate}
           />
-          <label htmlFor="nome">Data de Nascimento</label>
+          <label>Data de Nascimento</label>
         </span>
         <Button
           label="Adicionar"
@@ -203,105 +293,165 @@ export default function Admin() {
 
       <Dialog header="Cadastro do Cliente" visible={visible} onHide={() => setVisible(false)}
         style={{ width: '50vw' }} breakpoints={{ '960px': '75vw', '641px': '100vw' }}>
-        <form className='dialogBox'>
-          <div>
+        <form
+          className='dialogBox'
+          onSubmit={(e) => handleAddClient(e)}
+        >
+          <div className='inputBox'>
             <span className="p-float-label">
               <InputText
-                value={client.name || ''}
+                value={client.name ?? ''}
                 onChange={(e) => setClient({ ...client, name: e.target.value })}
-                // onchange="checkName()"
-                size="30"
+                onBlur={checkName}
+                size={40}
                 required
               />
-              <label htmlFor="nome">Nome</label>
+              <label>Nome Completo</label>
             </span>
             <span className="p-float-label">
               <Calendar
                 dateFormat="dd/mm/yy"
                 value={client.birthDate}
-                onChange={(e) => setClient({ ...client, birthDate: e.value })}
+                onChange={(e) => setClient({ ...client, birthDate: e.target.value })}
                 readOnlyInput
+                style={{ width: "8rem" }}
+                minDate={minDate}
+                maxDate={maxDate}
               />
-              <label htmlFor="nome">Data de Nascimento</label>
+              <label>Nascimento</label>
+            </span>
+            <span className="p-float-label">
+              <InputMask
+                value={client.phone}
+                mask='(99) 99999-9999'
+                onChange={(e) => setClient({ ...client, phone: e.target.value })}
+                size={11}
+                required
+              />
+              <label>Telefone</label>
             </span>
           </div>
 
-
-          <div className='radioContainer'>
-            <div className='radioOption'>
-              <RadioButton inputId="gender1" name="gender" value="Feminino" onChange={(e) => setClient({ ...client, gender: e.value })} checked={client.gender === 'Feminino'} />
-              <label htmlFor="gender1" className="ml-2">Feminino</label>
-            </div>
-            <div className='radioOption'>
-              <RadioButton inputId="gender2" name="gender" value="Masculino" onChange={(e) => setClient({ ...client, gender: e.value })} checked={client.gender === 'Masculino'} />
-              <label htmlFor="gender2" className="ml-2">Masculino</label>
-            </div>
-            <div className='radioOption'>
-              <RadioButton inputId="gender3" name="gender" value="Personalizado" onChange={(e) => setClient({ ...client, gender: e.value })} checked={client.gender === 'Personalizado'} />
-              <label htmlFor="gender3" className="ml-2">Personalizado</label>
-            </div>
+          <div className='inputBox'>
+            <span className="p-float-label">
+              <Dropdown
+                value={client.gender}
+                onChange={(e) => setClient({ ...client, gender: e.target.value, pronoun: '', optionalGender: '' })}
+                options={gender}
+                style={{ width: "11rem" }}
+              />
+              <label>Sexo</label>
+            </span>
+            <span className="p-float-label">
+              <InputMask
+                mask="999.999.999-99"
+                value={client.cpf}
+                onBlur={(e) => validateCPF(e)}
+                size={11}
+                required
+              />
+              <label>CPF</label>
+            </span>
+            <span className="p-float-label">
+              <InputMask
+                mask="99999-999"
+                value={client.cep}
+                onBlur={(e) => getCEP(e)}
+                size={7} required
+              />
+              <label>CEP</label>
+            </span>
           </div>
 
           {client.gender === 'Personalizado' && (
-            <div>
+            <div className='inputBox'>
               <div className="card flex justify-content-center">
                 <span className="p-float-label">
-                  <Dropdown inputId="pronome" value={client.pronouns} onChange={(e) => setClient({ ...client, pronouns: e.value })} options={pronouns} optionLabel="name" className="selectPronoun" />
-                  <label htmlFor="pronome">Seu pronome</label>
+                  <Dropdown
+                    value={client.pronoun}
+                    onChange={(e) => setClient({ ...client, pronoun: e.target.value })}
+                    options={pronouns}
+                    required
+                  />
+                  <label>Pronome</label>
                 </span>
               </div>
               <span className="p-float-label">
-                <InputText size="15" id="genero" />
-                <label htmlFor="genero">Gênero (opcional)</label>
+                <InputText
+                  value={client.optionalGender ?? ''}
+                  onChange={(e) => setClient({ ...client, optionalGender: e.target.value })}
+                  size={15}
+                />
+                <label>Gênero (opcional)</label>
               </span>
             </div>
           )
           }
 
-          <div>
+          <div className='inputBox'>
             <span className="p-float-label">
-              <InputMask mask="999.999.999-99" value={client.cpf} /* onChange={formatCPF} */ onChange={(e) => setClient({ ...client, cpf: e.target.value })} size="14" id="cpf" required />
-              <label htmlFor="cpf">CPF</label>
+              <InputText
+                value={client.street ?? ''}
+                size={30}
+                readOnly
+              />
+              <label>Rua</label>
             </span>
             <span className="p-float-label">
-              <InputMask mask="99999-999" /* onChange={getCEP} */ size="10" id="cep" required />
-              <label htmlFor="cep">CEP</label>
-            </span>
-          </div>
-
-          <div>
-            <span className="p-float-label">
-              <InputText id="rua" disabled />
-              <label htmlFor="rua">Rua</label>
+              <InputText
+                value={client.num ?? ''}
+                onChange={(e) => setClient({ ...client, num: e.target.value })}
+                size={2}
+                required
+              />
+              <label>Núm.</label>
             </span>
             <span className="p-float-label">
-              <InputText size={5} id="num" required />
-              <label htmlFor="num">Núm.</label>
-            </span>
-            <span className="p-float-label">
-              <InputText size={10} id="complemento" />
-              <label htmlFor="complemento">Complemento</label>
-            </span>
-          </div>
-
-          <div>
-            <span className="p-float-label">
-              <InputText id="bairro" disabled />
-              <label htmlFor="bairro">Bairro</label>
-            </span>
-            <span className="p-float-label">
-              <InputText id="cidade" disabled />
-              <label htmlFor="cidade">Cidade</label>
-            </span>
-            <span className="p-float-label">
-              <InputText size={1} id="estado" disabled />
-              <label htmlFor="estado">UF</label>
+              <InputText
+                value={client.compl ?? ''}
+                onChange={(e) => setClient({ ...client, compl: e.target.value })}
+                size={20}
+              />
+              <label>Complemento</label>
             </span>
           </div>
 
-          <div align="center">
-            <Button label="Adicionar" icon="pi pi-plus" onClick={() => setVisible(true)} />
-            <Button type='button' label="Limpar Campos" icon="pi pi-times" onClick={() => clearForm()} />
+          <div className='inputBox'>
+            <span className="p-float-label">
+              <InputText
+                value={client.neighborhood ?? ''}
+                readOnly
+              />
+              <label>Bairro</label>
+            </span>
+            <span className="p-float-label">
+              <InputText
+                value={client.city ?? ''}
+                readOnly
+              />
+              <label>Cidade</label>
+            </span>
+            <span className="p-float-label">
+              <InputText
+                value={client.state ?? ''}
+                size={1}
+                readOnly
+              />
+              <label>UF</label>
+            </span>
+          </div>
+
+          <div className='inputBox'>
+            <Button
+              label="Adicionar"
+              icon="pi pi-plus"
+            />
+            <Button
+              type='button'
+              label="Limpar Campos"
+              icon="pi pi-times"
+              onClick={clearForm}
+            />
           </div>
         </form>
       </Dialog>
@@ -329,3 +479,7 @@ export default function Admin() {
     </div>
   );
 };
+
+
+
+
