@@ -5,6 +5,7 @@ import Logo from '../../assets/logo.svg';
 
 import 'primeicons/primeicons.css';
 import { DataTable } from 'primereact/datatable';
+import { FilterMatchMode } from 'primereact/api';
 import { Column } from 'primereact/column';
 import { Calendar } from 'primereact/calendar';
 import { InputText } from 'primereact/inputtext';
@@ -17,15 +18,21 @@ import { Dropdown } from 'primereact/dropdown';
 
 import { auth, db } from '../../firebaseConnection';
 import { signOut } from 'firebase/auth';
-import { addDoc, collection, doc, deleteDoc, updateDoc, getDoc } from 'firebase/firestore';
+import { addDoc, collection, doc, deleteDoc, updateDoc, getDoc, onSnapshot } from 'firebase/firestore';
 
 export default function Admin() {
   const [user, setUser] = useState({});
   const [visible, setVisible] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
   const [edit, setEdit] = useState({});
   const [selectedClient, setSelectedClient] = useState(null);
   const [client, setClient] = useState({});
-  /* const [clientList, setClientList] = useState([]); */
+  const [clientList, setClientList] = useState([]);
+  const [filters, setFilters] = useState({
+    name: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+    phone: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+    state: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+  });
 
   const toast = useRef(null);
 
@@ -38,37 +45,13 @@ export default function Admin() {
     'Feminino',
     'Masculino',
     'Personalizado'
-  ]
+  ];
 
   const pronouns = [
     'Ele/Dele',
     'Ela/Dela',
     'Elu/Delu',
   ];
-
-  const fakeClients = [
-    {
-      id: 1,
-      name: 'João do Nascimento',
-      cpf: '123.456.789-00',
-      birthDate: '01/01/2000',
-      gender: 'Masculino'
-    },
-    {
-      id: 2,
-      name: 'Maria',
-      cpf: '123.456.789-00',
-      birthDate: '01/01/2000',
-      gender: 'Feminino'
-    },
-    {
-      id: 3,
-      name: 'José',
-      cpf: '123.456.789-00',
-      birthDate: '01/01/2000',
-      gender: 'Masculino'
-    },
-  ]
 
   useEffect(() => {
     async function loadUserName() {
@@ -88,18 +71,32 @@ export default function Admin() {
     }
 
     async function loadClients() {
-      /* const clientRef = collection(db, 'clients');
-      const q = query(clientRef, orderBy('created', 'desc'), where("userUid", "==", data.uid));
+      const clientRef = collection(db, 'clients');
 
-      onSnapshot(q, (snapshot) => {
+      onSnapshot(clientRef, (snapshot) => {
         let clients = [];
         snapshot.forEach((doc) => {
           clients.push({
-            // ?
+            birthDate: doc.data().birthDate,
+            cep: doc.data().cep,
+            city: doc.data().city,
+            compl: doc.data().compl,
+            cpf: doc.data().cpf,
+            creator: doc.data().creator,
+            gender: doc.data().gender,
+            name: doc.data().name,
+            neighborhood: doc.data().neighborhood,
+            num: doc.data().num,
+            optionalGender: doc.data().optionalGender,
+            phone: doc.data().phone,
+            pronoun: doc.data().pronoun,
+            state: doc.data().state,
+            street: doc.data().street,
+            id: doc.id,
           });
         });
         setClientList(clients);
-      }); */
+      });
     }
 
     loadUserName();
@@ -223,53 +220,24 @@ export default function Admin() {
     })
       .then(() => {
         toast.current.show({ severity: 'success', summary: 'Sucesso!', detail: 'Cliente adicionado!' });
-        setVisible(false);
-        setVisible(true);
+        return setClient({});
       })
       .catch(() => {
         toast.current.show({ severity: 'error', summary: 'Erro!', detail: 'Erro ao adicionar o cliente.' });
       });
   }
 
-  async function handleEditClient(item) {
-    setEdit(item);
-  }
-
-  async function handleDeleteClient(id) {
-    const docRef = doc(db, 'clients', id);
-    await deleteDoc(docRef)
-      .then(() => {
-        toast.current.show({ severity: 'success', summary: 'Sucesso!', detail: 'Cliente excluído.' });
-      })
-      .catch(() => {
-        toast.current.show({ severity: 'error', summary: 'Erro!', detail: 'Erro ao excluir o cliente.' });
-      });
-  }
-
-  async function handleLogout() {
-    await signOut(auth);
-  }
-
-  return (
-    <div className='adminContainer'>
-      <img src={Logo} alt="logo" />
-      <div className='adminWelcome'>
-        <h3>Seja bem-vindo(a)</h3>
-        <div className='adminInfo'>
-          <p>{user.name}</p>
-          <Button
-            icon="pi pi-sign-out"
-            className='p-button-danger'
-            onClick={handleLogout}
-          />
-        </div>
-      </div>
-
+  function headerTable() {
+    return (
       <div className="inputArea">
         <span className="p-float-label">
           <InputText
-            value={client.name || ''}
+            value={client.name ?? ''}
             onChange={(e) => setClient({ ...client, name: e.target.value })}
+            onBlur={checkName}
+            keyfilter={/^[ a-zA-ZÀ-ÿ\u00f1\u00d1]*$/g}
+            size={40}
+            required
           />
           <label>Nome</label>
         </span>
@@ -290,6 +258,71 @@ export default function Admin() {
           onClick={() => setVisible(true)}
         />
       </div>
+    );
+  }
+
+  function rowButtons(rowData) {
+    return (
+      <div className="rowButtons">
+        <Button
+          type="button"
+          icon="pi pi-pencil"
+          rounded
+          onClick={() => handleEditClient(rowData)}
+        />
+        <Button
+          type="button"
+          icon="pi pi-trash"
+          className="p-button-secondary"
+          rounded onClick={() => handleDeleteClient(rowData)}
+        />
+      </div>
+    );
+  };
+
+  async function handleEditClient(item) {
+    setEdit(item);
+    setClient(item);
+    setVisible(true);
+  }
+
+  async function handleDeleteClient(rowData) {
+    setConfirmDelete(true);
+    setSelectedClient(rowData);
+  }
+
+  async function handleConfirmDeleteClient() {
+    setConfirmDelete(false);
+    const docRef = doc(db, 'clients', selectedClient.id);
+    await deleteDoc(docRef)
+      .then(() => {
+        toast.current.show({ severity: 'success', summary: 'Sucesso!', detail: 'Cliente excluído.' });
+      })
+      .catch(() => {
+        toast.current.show({ severity: 'error', summary: 'Erro!', detail: 'Erro ao excluir o cliente.' });
+      });
+    setSelectedClient(null);
+  }
+
+  async function handleLogout() {
+    await signOut(auth);
+  }
+
+  return (
+    <div className='adminContainer'>
+      <Toast ref={toast} />
+      <img src={Logo} alt="logo" />
+      <div className='adminWelcome'>
+        <h3>Seja bem-vindo(a)</h3>
+        <div className='adminInfo'>
+          <p>{user.name}</p>
+          <Button
+            icon="pi pi-sign-out"
+            className='p-button-danger'
+            onClick={handleLogout}
+          />
+        </div>
+      </div>
 
       <Dialog header="Cadastro do Cliente" visible={visible} onHide={() => setVisible(false)}
         style={{ width: '50vw' }} breakpoints={{ '960px': '75vw', '641px': '100vw' }}>
@@ -303,6 +336,7 @@ export default function Admin() {
                 value={client.name ?? ''}
                 onChange={(e) => setClient({ ...client, name: e.target.value })}
                 onBlur={checkName}
+                keyfilter={/^[ a-zA-ZÀ-ÿ\u00f1\u00d1]*$/g}
                 size={40}
                 required
               />
@@ -338,7 +372,7 @@ export default function Admin() {
                 value={client.gender}
                 onChange={(e) => setClient({ ...client, gender: e.target.value, pronoun: '', optionalGender: '' })}
                 options={gender}
-                style={{ width: "11rem" }}
+                style={{ width: "12rem" }}
               />
               <label>Sexo</label>
             </span>
@@ -372,6 +406,7 @@ export default function Admin() {
                     onChange={(e) => setClient({ ...client, pronoun: e.target.value })}
                     options={pronouns}
                     required
+                    style={{ width: '9rem' }}
                   />
                   <label>Pronome</label>
                 </span>
@@ -402,6 +437,7 @@ export default function Admin() {
                 value={client.num ?? ''}
                 onChange={(e) => setClient({ ...client, num: e.target.value })}
                 size={2}
+                keyfilter={'int'}
                 required
               />
               <label>Núm.</label>
@@ -441,7 +477,7 @@ export default function Admin() {
             </span>
           </div>
 
-          <div className='inputBox'>
+          <div className='inputBox' style={{paddingTop: '3rem'}}>
             <Button
               label="Adicionar"
               icon="pi pi-plus"
@@ -450,6 +486,7 @@ export default function Admin() {
               type='button'
               label="Limpar Campos"
               icon="pi pi-times"
+              className='p-button-danger'
               onClick={clearForm}
             />
           </div>
@@ -459,27 +496,42 @@ export default function Admin() {
       <Divider />
 
       <div className='clientList'>
-        <Toast ref={toast} />
         <div className="card">
-          <DataTable value={fakeClients}
-            selectionMode="single"
-            selection={selectedClient}
-            onSelectionChange={(e) => { setSelectedClient(e.value) }}
+          <DataTable
+            value={clientList}
             dataKey="id"
-            tableStyle={{ minWidth: '50rem' }}
+            filters={filters}
+            filterDisplay="row"
+            onSelectionChange={(e) => { setSelectedClient(e.value) }}
+            globalFilterFields={['name', 'phone', 'state']}
+            emptyMessage="Clientes não encontrados."
+            header={headerTable()}
             stripedRows
+            removableSort
+            style={{ width: '100%' }}
           >
-            <Column field="name" header="Nome" />
-            <Column field="cpf" header="CPF" />
-            <Column field="birthDate" header="Data de Nascimento" />
-            <Column field="gender" header="Gênero" />
+            <Column sortable field="name" header="Cliente" filter style={{ maxWidth: '18rem', minWidth: '12rem' }} />
+            <Column sortable field="phone" header="Telefone" filter style={{ maxWidth: '13rem', minWidth: '12rem' }} />
+            <Column sortable field="state" header="Estado" filter style={{ maxWidth: '9rem', minWidth: '7rem' }} />
+            <Column body={rowButtons} />
           </DataTable>
         </div>
       </div>
+
+      <Dialog visible={confirmDelete} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmação" modal onHide={() => setConfirmDelete(false)}>
+        <div className="confirmation-content">
+          <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+          <span>
+            Você tem certeza que deseja excluir esse cliente?
+          </span>
+          <Button label="Não" icon="pi pi-times" outlined onClick={() => setConfirmDelete(false)} />
+          <Button label="Sim" icon="pi pi-check" severity="danger" onClick={() => handleConfirmDeleteClient()} />
+        </div>
+      </Dialog>
+
     </div>
   );
 };
-
 
 
 

@@ -47,7 +47,6 @@ export default function Home() {
   return (
     <div className='homeContainer'>
       <img src={Logo} alt="logo" />
-      <span>Gerencie suas tarefas de forma fácil e rápida.</span>
 
       <form
         className='homeForm'
