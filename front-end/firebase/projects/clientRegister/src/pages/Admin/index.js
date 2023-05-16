@@ -1,24 +1,24 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-import './style.css';
 import Logo from '../../assets/logo.svg';
+import './style.css';
 
 import 'primeicons/primeicons.css';
-import { DataTable } from 'primereact/datatable';
-import { FilterMatchMode } from 'primereact/api';
-import { Column } from 'primereact/column';
+import { FilterMatchMode, FilterOperator } from 'primereact/api';
+import { Button } from 'primereact/button';
 import { Calendar } from 'primereact/calendar';
-import { InputText } from 'primereact/inputtext';
-import { InputMask } from 'primereact/inputmask';
-import { Button } from 'primereact/button'
-import { Divider } from 'primereact/divider';
-import { Toast } from 'primereact/toast';
+import { Column } from 'primereact/column';
+import { DataTable } from 'primereact/datatable';
 import { Dialog } from 'primereact/dialog';
+import { Divider } from 'primereact/divider';
 import { Dropdown } from 'primereact/dropdown';
+import { InputMask } from 'primereact/inputmask';
+import { InputText } from 'primereact/inputtext';
+import { Toast } from 'primereact/toast';
 
-import { auth, db } from '../../firebaseConnection';
 import { signOut } from 'firebase/auth';
-import { addDoc, collection, doc, deleteDoc, updateDoc, getDoc, onSnapshot } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, getDoc, onSnapshot, updateDoc } from 'firebase/firestore';
+import { auth, db } from '../../firebaseConnection';
 
 export default function Admin() {
   const [user, setUser] = useState({});
@@ -28,11 +28,30 @@ export default function Admin() {
   const [selectedClient, setSelectedClient] = useState(null);
   const [client, setClient] = useState({});
   const [clientList, setClientList] = useState([]);
-  const [filters, setFilters] = useState({
-    name: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
-    phone: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
-    state: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
-  });
+  const [globalFilterValue, setGlobalFilterValue] = useState('');
+  const [filters, setFilters] = useState(null);
+
+  const initFilters = () => {
+    setFilters({
+      global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+      name: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+      phone: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+      birthDate: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }] },
+      strDate: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }] },
+      state: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+    });
+    setGlobalFilterValue('');
+  };
+
+  const onGlobalFilterChange = (e) => {
+    const value = e.target.value;
+    let _filters = { ...filters };
+
+    _filters['global'].value = value;
+
+    setFilters(_filters);
+    setGlobalFilterValue(value);
+  };
 
   const toast = useRef(null);
 
@@ -92,6 +111,7 @@ export default function Admin() {
             pronoun: doc.data().pronoun,
             state: doc.data().state,
             street: doc.data().street,
+            strDate: doc.data().strDate.toDate(),
             id: doc.id,
           });
         });
@@ -99,6 +119,7 @@ export default function Admin() {
       });
     }
 
+    initFilters();
     loadUserName();
     loadClients();
   }, []);
@@ -181,6 +202,22 @@ export default function Admin() {
     }
   }
 
+  const formatDate = (value) => {
+    return value.toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
+  };
+
+  const dateBodyTemplate = (rowData) => {
+    return formatDate(rowData.strDate);
+  };
+
+  const dateFilterTemplate = (options) => {
+    return <Calendar value={options.value} onChange={(e) => options.filterCallback(e.value, options.index)} dateFormat="dd/mm/yy" placeholder="dd/mm/yyyy" mask="99/99/9999" />;
+  };
+
   function clearForm() {
     setClient({});
   }
@@ -189,29 +226,31 @@ export default function Admin() {
     e.preventDefault();
 
     if (edit?.id) {
-      if (true) {
+      if (edit.client === client) {
         toast.current.show({ severity: 'warn', summary: 'Atenção!', detail: 'Você não modificou os dados do cliente.' });
         setClient({});
         setEdit({});
       } else {
         const docRef = doc(db, 'clients', edit?.id);
         await updateDoc(docRef, {
-          // ?
+          ...client,
+          updatedAt: new Date(),
         })
           .then(() => {
             toast.current.show({ severity: 'success', summary: 'Sucesso!', detail: 'Dados do cliente atualizados!' });
 
             setEdit({});
+            setClient({});
           })
-          .catch(() => {
+          .catch((error) => {
             toast.current.show({ severity: 'error', summary: 'Erro!', detail: 'Erro ao atualizar os dados do cliente.' });
 
             setEdit({});
+            setClient({});
           })
       }
       return;
     }
-
 
     await addDoc(collection(db, 'clients'), {
       ...client,
@@ -227,36 +266,21 @@ export default function Admin() {
       });
   }
 
+  const clearFilter = () => {
+    initFilters();
+  };
+
   function headerTable() {
     return (
-      <div className="inputArea">
-        <span className="p-float-label">
-          <InputText
-            value={client.name ?? ''}
-            onChange={(e) => setClient({ ...client, name: e.target.value })}
-            onBlur={checkName}
-            keyfilter={/^[ a-zA-ZÀ-ÿ\u00f1\u00d1]*$/g}
-            size={40}
-            required
-          />
-          <label>Nome</label>
-        </span>
-        <span className="p-float-label">
-          <Calendar
-            dateFormat="dd/mm/yy"
-            value={client.birthDate}
-            onChange={(e) => setClient({ ...client, birthDate: e.value })}
-            readOnlyInput
-            minDate={minDate}
-            maxDate={maxDate}
-          />
-          <label>Data de Nascimento</label>
-        </span>
-        <Button
-          label="Adicionar"
-          icon="pi pi-plus"
-          onClick={() => setVisible(true)}
-        />
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <h3>Lista de Clientes</h3>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <Button type="button" icon="pi pi-filter-slash" label="Limpar Filtros" onClick={clearFilter} style={{ padding: '16px' }} />
+          <span className="p-input-icon-left">
+            <i className="pi pi-search" />
+            <InputText value={globalFilterValue} size={24} onChange={onGlobalFilterChange} placeholder="Procurar por palavra-chave" />
+          </span>
+        </div>
       </div>
     );
   }
@@ -281,8 +305,8 @@ export default function Admin() {
   };
 
   async function handleEditClient(item) {
-    setEdit(item);
-    setClient(item);
+    setEdit({ ...item, birthDate: item.birthDate.toDate() });
+    setClient({ ...item, birthDate: item.birthDate.toDate() });
     setVisible(true);
   }
 
@@ -324,11 +348,54 @@ export default function Admin() {
         </div>
       </div>
 
-      <Dialog header="Cadastro do Cliente" visible={visible} onHide={() => setVisible(false)}
+      <div className="inputArea">
+        <div style={{ display: 'flex', gap: '1rem' }}>
+          <span className="p-float-label">
+            <InputText
+              value={client.name ?? ''}
+              onChange={(e) => setClient({ ...client, name: e.target.value })}
+              onBlur={checkName}
+              keyfilter={/^[ a-zA-ZÀ-ÿ\u00f1\u00d1]*$/g}
+              size={40}
+              required
+            />
+            <label>Nome</label>
+          </span>
+          <span className="p-float-label">
+            <Calendar
+              dateFormat="dd/mm/yy"
+              value={client.birthDate}
+              onChange={(e) => {
+                setClient({ ...client, birthDate: e.value, strDate: new Date(e.value.toDateString()) })
+              }}
+              readOnlyInput
+              minDate={minDate}
+              maxDate={maxDate}
+            />
+            <label>Data de Nascimento</label>
+          </span>
+        </div>
+
+        <Button
+          label="Cadastrar Cliente"
+          icon="pi pi-plus"
+          onClick={() => setVisible(true)}
+          style={{ padding: '16px' }}
+        />
+      </div>
+
+      <Dialog header="Cadastro do Cliente" visible={visible} onHide={() => {
+        setVisible(false)
+        setEdit({})
+      }
+      }
         style={{ width: '50vw' }} breakpoints={{ '960px': '75vw', '641px': '100vw' }}>
         <form
           className='dialogBox'
-          onSubmit={(e) => handleAddClient(e)}
+          onSubmit={(e) => {
+            handleAddClient(e)
+            setVisible(false)
+          }}
         >
           <div className='inputBox'>
             <span className="p-float-label">
@@ -346,7 +413,9 @@ export default function Admin() {
               <Calendar
                 dateFormat="dd/mm/yy"
                 value={client.birthDate}
-                onChange={(e) => setClient({ ...client, birthDate: e.target.value })}
+                onChange={(e) => {
+                  setClient({ ...client, birthDate: e.value, strDate: new Date(e.value.toDateString()) })
+                }}
                 readOnlyInput
                 style={{ width: "8rem" }}
                 minDate={minDate}
@@ -477,11 +546,22 @@ export default function Admin() {
             </span>
           </div>
 
-          <div className='inputBox' style={{paddingTop: '3rem'}}>
-            <Button
-              label="Adicionar"
-              icon="pi pi-plus"
-            />
+          <div className='inputBox' style={{ paddingTop: '3rem' }}>
+            {
+              edit?.id ? (
+                <Button
+                  type='submit'
+                  label="Atualizar"
+                  icon="pi pi-check"
+                />
+              ) : (
+                <Button
+                  type='submit'
+                  label="Cadastrar"
+                  icon="pi pi-plus"
+                />
+              )
+            }
             <Button
               type='button'
               label="Limpar Campos"
@@ -501,37 +581,36 @@ export default function Admin() {
             value={clientList}
             dataKey="id"
             filters={filters}
-            filterDisplay="row"
             onSelectionChange={(e) => { setSelectedClient(e.value) }}
             globalFilterFields={['name', 'phone', 'state']}
             emptyMessage="Clientes não encontrados."
-            header={headerTable()}
+            header={headerTable}
             stripedRows
+            filterDisplay="menu"
             removableSort
             style={{ width: '100%' }}
           >
-            <Column sortable field="name" header="Cliente" filter style={{ maxWidth: '18rem', minWidth: '12rem' }} />
-            <Column sortable field="phone" header="Telefone" filter style={{ maxWidth: '13rem', minWidth: '12rem' }} />
-            <Column sortable field="state" header="Estado" filter style={{ maxWidth: '9rem', minWidth: '7rem' }} />
+            <Column sortable field="name" header="Cliente" filter style={{ minWidth: '20rem' }} />
+            <Column sortable field="strDate" header="Nascimento" filterField='strDate' dataType="date" body={dateBodyTemplate} filter filterElement={dateFilterTemplate} style={{ minWidth: '5rem' }} />
+            <Column sortable field="phone" header="Telefone" filter style={{ minWidth: '5rem' }} />
+            <Column sortable field="state" header="Estado" filter />
             <Column body={rowButtons} />
           </DataTable>
         </div>
       </div>
 
       <Dialog visible={confirmDelete} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmação" modal onHide={() => setConfirmDelete(false)}>
-        <div className="confirmation-content">
-          <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <span>
             Você tem certeza que deseja excluir esse cliente?
           </span>
-          <Button label="Não" icon="pi pi-times" outlined onClick={() => setConfirmDelete(false)} />
-          <Button label="Sim" icon="pi pi-check" severity="danger" onClick={() => handleConfirmDeleteClient()} />
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', margin: '1rem 0 0 0' }}>
+            <Button label="Não" icon="pi pi-times" outlined onClick={() => setConfirmDelete(false)} />
+            <Button label="Sim" icon="pi pi-check" severity="danger" onClick={() => handleConfirmDeleteClient()} />
+          </div>
         </div>
       </Dialog>
 
     </div>
   );
 };
-
-
-
