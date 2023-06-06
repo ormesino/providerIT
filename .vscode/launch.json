@@ -2,6 +2,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "ServerApplication",
+      "request": "launch",
+      "mainClass": "br.com.providerit.ServerApplication",
+      "projectName": "learning"
+    },
+    {
+      "type": "java",
       "name": "Spring Boot-VendasApplication<learning>",
       "request": "launch",
       "cwd": "${workspaceFolder}",
