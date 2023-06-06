@@ -1,0 +1,14 @@
+{
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Spring Boot-VendasApplication<learning>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "br.com.providerit.VendasApplication",
+      "projectName": "learning",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
+    }
+  ]
+}
