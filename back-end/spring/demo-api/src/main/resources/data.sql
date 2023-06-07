@@ -1,0 +1,24 @@
+CREATE TABLE IF NOT EXISTS `Client` (
+  `id` INTEGER PRIMARY KEY AUTO_INCREMENT,
+  `fullName` VARCHAR(100)
+);
+
+CREATE TABLE IF NOT EXISTS `Product` (
+  `id` INTEGER PRIMARY KEY AUTO_INCREMENT,
+  `description` VARCHAR(100),
+  `price` NUMERIC(20,2)
+);
+
+CREATE TABLE IF NOT EXISTS `Order` (
+  `id` INTEGER PRIMARY KEY AUTO_INCREMENT,
+  `clientId` INTEGER REFERENCES `Client` (`id`),
+  `orderDate` TIMESTAMP,
+  `total` NUMERIC(20,2)
+);
+
+CREATE TABLE IF NOT EXISTS `OrderItem` (
+  `id` INTEGER PRIMARY KEY AUTO_INCREMENT,
+  `productId` INTEGER REFERENCES `Product` (`id`),
+  `orderId` INTEGER REFERENCES `Order` (`id`),
+  `qnty` INTEGER
+); 
