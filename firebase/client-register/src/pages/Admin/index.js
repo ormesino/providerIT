@@ -148,13 +148,13 @@ export default function Admin() {
       let soma = 0;
       let resto;
 
-      if (cpf.length === 11 && cpf != "00000000000") {
+      if (cpf.length === 11 && cpf !== "00000000000") {
         for (let i = 0; i < 9; i++) {
           soma += parseInt(cpf[i]) * (10 - i);
         }
         resto = (soma * 10) % 11;
         if (resto === 10) resto = 0;
-        if (resto != parseInt(cpf[9])) {
+        if (resto !== parseInt(cpf[9])) {
           toast.current.show({ severity: 'warn', summary: 'Atenção!', detail: 'Digite um CPF válido.' });
           return setClient({ ...client, cpf: '' });
         }
@@ -165,7 +165,7 @@ export default function Admin() {
         }
         resto = (soma * 10) % 11;
         if (resto === 10) resto = 0;
-        if (resto != parseInt(cpf[10])) {
+        if (resto !== parseInt(cpf[10])) {
           toast.current.show({ severity: 'warn', summary: 'Atenção!', detail: 'Digite um CPF válido.' });
           return setClient({ ...client, cpf: '' });
         }
@@ -189,7 +189,7 @@ export default function Admin() {
         })
         .then((data) => {
           if (data.logradouro === undefined || cep.length !== 8) {
-            throw new Error;
+            throw new Error();
           }
           return setClient({ ...client, cep, street: data.logradouro, neighborhood: data.bairro, city: data.localidade, state: data.uf })
         })
