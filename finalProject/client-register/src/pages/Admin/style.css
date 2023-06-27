@@ -1,0 +1,67 @@
+.adminContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 80%;
+  max-width: 90rem;
+  margin: 6rem auto;
+}
+
+.adminContainer img {
+  margin-bottom: 5rem;
+}
+
+.adminWelcome {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.adminInfo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.inputArea {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 1rem;
+  background-color: #1e1e1e;
+  margin: 1rem 0;
+}
+
+.clientList {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.dialogBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.inputBox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 auto;
+  padding: 0.5rem 0 0.5rem 1rem;
+}
+
+.selectPronoun {
+  width: 10rem;
+}
+
+.rowButtons {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}

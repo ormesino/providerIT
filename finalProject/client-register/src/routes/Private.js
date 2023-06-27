@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../firebaseConnection';
+import { auth } from '../services/firebaseConnection';
 
 import { Navigate } from 'react-router-dom';
 
@@ -13,11 +13,6 @@ export default function Private({ children }) {
     async function checkLogin() {
       onAuthStateChanged(auth, (user) => {
         if (user) {
-          const userData = {
-            uid: user.uid,
-            email: user.email,
-          };
-          localStorage.setItem('@detailUser', JSON.stringify(userData));
           setLoading(false);
           setSigned(true);
         } else {

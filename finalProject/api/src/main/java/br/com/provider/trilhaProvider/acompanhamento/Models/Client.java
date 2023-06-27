@@ -1,7 +1,6 @@
 package br.com.provider.trilhaProvider.acompanhamento.Models;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,12 +24,13 @@ public class Client implements Serializable {
   private Long id;
 
   @NotNull
-  @Column(name = "full_name")
-  private String fullName;
+  private String name;
 
   @NotNull
-  @Column(name = "birth_date")
-  private LocalDate birthDate;
+  private Long birthDate;
+
+  @NotNull
+  private String strDate;
 
   @NotNull
   private String phone;
@@ -40,7 +40,6 @@ public class Client implements Serializable {
 
   private String pronoun;
 
-  @Column(name = "optional_gender")
   private String optionalGender;
 
   @NotNull
@@ -65,5 +64,5 @@ public class Client implements Serializable {
   private String city;
 
   @NotNull
-  private String uf;
+  private String state;
 }

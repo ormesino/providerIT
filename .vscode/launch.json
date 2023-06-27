@@ -5,6 +5,13 @@
       "name": "trilhaProviderApplication",
       "request": "launch",
       "mainClass": "br.com.provider.trilhaProvider.trilhaProviderApplication",
+      "projectName": "trilhaProvider"
+    },
+    {
+      "type": "java",
+      "name": "trilhaProviderApplication",
+      "request": "launch",
+      "mainClass": "br.com.provider.trilhaProvider.trilhaProviderApplication",
       "projectName": "br.com.provider-trilhaProvider"
     },
     {

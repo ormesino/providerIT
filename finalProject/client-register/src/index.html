@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Formulário</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <!-- Div do form -->
+  <div class="formContainer">
+    <table class="formTable" cellspacing="1px" cellpadding="1px">
+      <form onsubmit="saveData()">
+        <tr>
+          <td colspan="3" align="center">
+            <h1>Cadastro</h1>
+          </td>
+        </tr>
+
+        <tr>
+          <td colspan="2">
+            <input type="text" placeholder="Nome Completo" onchange="checkName()" size="42" maxlength="80" id="nome" required>
+          </td align="center">
+          <td>
+            <input type="text" placeholder="Data de Nascimento" onfocus="(this.type='date') && formatDate()" id="nascimento" required />
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            <select placeholder="Selecione" id="genero" required>
+              <option value="" hidden disabled selected>Gênero</option>
+              <option value="Masculino">Masculino</option>
+              <option value="Feminino">Feminino</option>
+            </select>
+          </td>
+          <td colspan="2" class="radioButtons">
+            <label class="radioLabel">
+              <input type="radio" name="situacao" value="Solteiro(a)" id="radio" required>
+              Solteiro(a)
+            </label>
+            <label class="radioLabel">
+              <input type="radio" name="situacao" value="Casado(a)">
+              Casado(a)
+            </label>
+            <label class="radioLabel">
+              <input type="radio" name="situacao" value="Viúvo(a)">
+              Viúvo(a)
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            <input type="text" placeholder="CPF" onchange="formatCPF()" maxlength="14" size="14" id="cpf" required>
+          </td>
+          <td>
+            <input type="text" placeholder="RG" maxlength="9" size="10" id="rg" required>
+          </td>
+          <td>
+            <input type="text" placeholder="CEP" onchange="getCEP()" maxlength="9" size="10" id="cep" required>
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            <input type="text" placeholder="Rua" id="rua" readonly>
+          </td>
+          <td>
+            <input type="text" placeholder="Núm." size="5" id="num" required>
+          </td>
+          <td>
+            <input type="text" placeholder="Complemento" id="compl">
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            <input type="text" placeholder="Bairro" id="bairro" readonly>
+          </td>
+          <td>
+            <input type="text" placeholder="Cidade" id="cidade" readonly>
+          </td>
+          <td>
+            <input type="text" placeholder="UF" size="1" id="estado" readonly>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="btnPlace" colspan="3" align="center">
+            <button type="submit" class="inputBtn">Enviar</button>
+            <button type="button" class="inputBtn" onclick="clearForm()">Limpar Campos</button>
+          </td>
+        </tr>
+      </form>
+    </table>
+  </div>
+
+  <!-- Div da Tabela de Dados -->
+  <div class="tableContainer" style="visibility: hidden;">
+    <h2>Clientes Registrados</h2>
+
+    <table class="dataTable" cellspacing="2px" cellpadding="2px">
+      <thead>
+        <tr class="header">
+          <th>ID</th>
+          <th>Nome Completo</th>
+          <th>RG</th>
+          <th>CPF</th>
+          <th>CEP</th>
+          <th>Rua</th>
+          <th>Núm.</th>
+          <th>Complemento</th>
+          <th>Bairro</th>
+          <th>Cidade</th>
+          <th>Estado</th>
+          <th>Sexo</th>
+          <th>Data de Nasc.</th>
+          <th>Situação Civil</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+
+    <div class="btnDeletePlace">
+      <button type="button" class="btnDelDB" onclick="clearDB()">Apagar Tabela</button>
+    </div>
+  </div>
+
+  <!-- Chamada do script -->
+  <script src="scripts/main.js"></script>
+</body>
+
+</html>
