@@ -1,7 +1,7 @@
 package br.com.provider.trilhaProvider.acompanhamento.Models;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -30,7 +30,7 @@ public class Client implements Serializable {
 
   @NotNull
   @Column(name = "birth_date")
-  private Date birthDate;
+  private LocalDate birthDate;
 
   @NotNull
   private String phone;

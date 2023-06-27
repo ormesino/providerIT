@@ -34,8 +34,8 @@ public class ClientService {
     return null;
   }
 
-  public List<ClientDTO> findByName(String clientName) throws Exception {
-    List<ClientDTO> clients = convertListToDTO(clientRepository.findByNameClient(clientName));
+  public List<ClientDTO> findByFullName(String clientName) throws Exception {
+    List<ClientDTO> clients = convertListToDTO(clientRepository.findByFullName(clientName));
     if (clients.size() == 0)
       throw new Exception("NOT FOUND");
     return clients;
@@ -129,85 +129,4 @@ public class ClientService {
   private List<ClientDTO> convertListToDTO(List<Client> client) {
     return client.stream().map(t -> convertClientDTO(t)).collect(Collectors.toList());
   }
-
-  /*
-   * @Autowired
-   * ClientRepository clientRepository;
-   * 
-   * @Transactional
-   * public ClientDTO create(ClientDTO dto) {
-   * Client objClient = new Client();
-   * objClient.setId(dto.getId());
-   * objClient.setFullName(dto.getFullName());
-   * objClient.setBirthDate(dto.getBirthDate());
-   * objClient.setPhone(dto.getPhone());
-   * objClient.setGender(dto.getGender());
-   * objClient.setPronoun(dto.getPronoun());
-   * objClient.setOptionalGender(dto.getOptionalGender());
-   * objClient.setCpf(dto.getCpf());
-   * objClient.setCep(dto.getCep());
-   * objClient.setStreet(dto.getStreet());
-   * objClient.setNum(dto.getNum());
-   * objClient.setCompl(dto.getCompl());
-   * objClient.setNeighbourhood(dto.getNeighbourhood());
-   * objClient.setCity(dto.getCity());
-   * objClient.setUf(dto.getUf());
-   * objClient = clientRepository.save(objClient);
-   * return new ClientDTO(objClient);
-   * }
-   * 
-   * @Transactional
-   * public List<ClientDTO> findAll() {
-   * List<Client> list = clientRepository.findAll();
-   * List<ClientDTO> listDTO = list.stream().map(client -> new
-   * ClientDTO(client)).collect(Collectors.toList());
-   * return listDTO;
-   * }
-   * 
-   * @Transactional
-   * public ClientDTO findById(Long id) {
-   * Optional<Client> optClient = clientRepository.findById(id);
-   * Client client = optClient.orElseThrow(() -> new
-   * ResourceNotFoundException("Client not found"));
-   * return new ClientDTO(client);
-   * }
-   * 
-   * @Transactional
-   * public ClientDTO update(Long id, ClientDTO dto) {
-   * try {
-   * clientRepository.findById(id);
-   * Client objClient = clientRepository.getReferenceById(id);
-   * objClient.setId(dto.getId());
-   * objClient.setFullName(dto.getFullName());
-   * objClient.setBirthDate(dto.getBirthDate());
-   * objClient.setPhone(dto.getPhone());
-   * objClient.setGender(dto.getGender());
-   * objClient.setPronoun(dto.getPronoun());
-   * objClient.setOptionalGender(dto.getOptionalGender());
-   * objClient.setCpf(dto.getCpf());
-   * objClient.setCep(dto.getCep());
-   * objClient.setStreet(dto.getStreet());
-   * objClient.setNum(dto.getNum());
-   * objClient.setCompl(dto.getCompl());
-   * objClient.setNeighbourhood(dto.getNeighbourhood());
-   * objClient.setCity(dto.getCity());
-   * objClient.setUf(dto.getUf());
-   * objClient = clientRepository.save(objClient);
-   * return new ClientDTO(objClient);
-   * }
-   * catch (EntityNotFoundException e) {
-   * throw new ResourceNotFoundException("Client not found.");
-   * }
-   * }
-   * 
-   * public void delete(Long id) {
-   * try {
-   * clientRepository.findById(id);
-   * clientRepository.deleteById(id);
-   * }
-   * catch(EmptyResultDataAccessException e) {
-   * throw new ResourceNotFoundException("Client not found.");
-   * }
-   * }
-   */
 }

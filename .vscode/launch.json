@@ -2,6 +2,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "trilhaProviderApplication",
+      "request": "launch",
+      "mainClass": "br.com.provider.trilhaProvider.trilhaProviderApplication",
+      "projectName": "br.com.provider-trilhaProvider"
+    },
+    {
+      "type": "java",
       "name": "ServerApplication",
       "request": "launch",
       "mainClass": "br.com.providerit.ServerApplication",

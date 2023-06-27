@@ -55,11 +55,10 @@ public class ClientController {
 
   @CrossOrigin
   @GetMapping("findByName/{clientName}")
-  public ResponseEntity<List<ClientDTO>> getAllGestorByNome(@PathVariable String clientName) {
+  public ResponseEntity<List<ClientDTO>> findByFullName(@PathVariable String clientName) {
     try {
-      List<ClientDTO> clients = clientService.findByName(clientName);
+      List<ClientDTO> clients = clientService.findByFullName(clientName);
       return new ResponseEntity<>(clients, HttpStatus.OK);
-
     } catch (Exception e) {
       return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }

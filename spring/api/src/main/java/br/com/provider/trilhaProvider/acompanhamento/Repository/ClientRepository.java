@@ -8,5 +8,5 @@ import br.com.provider.trilhaProvider.acompanhamento.Models.Client;
 
 public interface ClientRepository extends JpaRepository<Client, Long> {
 
-    List<Client> findByNameClient(String clientName);
+    List<Client> findByFullName(String fullName);
 }
